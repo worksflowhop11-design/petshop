@@ -1,0 +1,6 @@
+{
+  "name": "PETSHOP",
+  "description": "Premium Natural Pet Food for Happy Dogs & Cats - Official Brand Landing Page",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
