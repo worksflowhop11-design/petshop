@@ -1,7 +1,7 @@
 export type PetType = 'dog' | 'cat';
 
-export type DogSubCategory = 'chicken-rice' | 'lamb-veg' | 'puppy' | 'senior';
-export type CatSubCategory = 'kitten' | 'adult' | 'ocean-fish' | 'hairball';
+export type DogSubCategory = 'chicken-rice' | 'lamb-veg' | 'puppy' | 'senior' | 'wet-food';
+export type CatSubCategory = 'kitten' | 'adult' | 'ocean-fish' | 'hairball' | 'wet-food';
 export type ProductCategory = DogSubCategory | CatSubCategory;
 
 export interface ProductItem {
@@ -10,6 +10,7 @@ export interface ProductItem {
   category: ProductCategory;
   petType: PetType;
   petTypeLabel: string; // e.g. "For Adult Dogs", "For Growing Puppies"
+  packSize?: string; // e.g. "3 kg", "400g"
   shortDescription: string;
   longDescription: string;
   ageCategory: string; // e.g. "Puppy (0-12 months)", "Adult (1-7 years)", "Senior (7+ years)"

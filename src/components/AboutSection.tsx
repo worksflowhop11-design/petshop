@@ -89,26 +89,26 @@ export const AboutSection: React.FC = () => {
               {/* Main Packaging Image Frame */}
               <div className="relative rounded-3xl overflow-hidden border-4 border-white shadow-2xl bg-white group">
                 <img
-                  src={ASSETS.aboutPackages}
-                  alt="PETSHOP Premium Branded Food Packaging"
+                  src={ASSETS.fullCollection}
+                  alt="PETSHOP Complete Product Packaging Collection - Food | Love | Care"
                   referrerPolicy="no-referrer"
                   className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700"
                 />
 
                 {/* Floating Brand Badge Top */}
                 <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-4 py-2 rounded-2xl shadow-lg border border-[#FFE8A3] flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#1E4DB7]" />
+                  <Sparkles className="w-4 h-4 text-[#D62828]" />
                   <span className="text-xs font-black text-[#2B2B2B] tracking-wider uppercase">
-                    100% Original PETSHOP Formula
+                    Petshop • Food | Love | Care
                   </span>
                 </div>
 
                 {/* Floating Rating Pill Bottom */}
-                <div className="absolute bottom-4 right-4 bg-[#1E4DB7]/95 text-white backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-xl flex items-center gap-2 border border-white/20">
+                <div className="absolute bottom-4 right-4 bg-[#D62828]/95 text-white backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-xl flex items-center gap-2 border border-white/20">
                   <Heart className="w-4 h-4 text-[#FFE8A3] fill-current" />
                   <div>
-                    <p className="text-xs font-bold leading-none text-white">Vet Endorsed Recipe</p>
-                    <p className="text-[10px] text-[#FFE8A3] font-medium">Dog & Cat Complete Nutrition</p>
+                    <p className="text-xs font-bold leading-none text-white">Complete Product Lineup</p>
+                    <p className="text-[10px] text-[#FFE8A3] font-medium">3kg Bags, Puppy, Kitten & Wet Cans</p>
                   </div>
                 </div>
               </div>

@@ -20,21 +20,187 @@ import catHairballPkg from '../assets/images/petshop_cat_hairball_pkg_1786026804
 import catIndoorPkg from '../assets/images/petshop_cat_indoor_pkg_1786026819870.jpg';
 import catSensitivePkg from '../assets/images/petshop_cat_sensitive_pkg_1786026836146.jpg';
 
+// New Brand Packaging Collection & Photoshoot Assets
+import fullCollectionImg from '../assets/images/petshop_full_collection_photoshoot_1787839334527.jpg';
+import dogFood3kgImg from '../assets/images/petshop_dog_food_3kg_pkg_1787839358339.jpg';
+import catFood3kgImg from '../assets/images/petshop_cat_food_3kg_pkg_1787839380110.jpg';
+import wetFoodCansImg from '../assets/images/petshop_wet_food_cans_pkg_1787839401447.jpg';
+
 export const ASSETS = {
   heroBanner: heroBannerImg,
   dogFood: dogFoodImg,
   catFood: catFoodImg,
   aboutPackages: aboutPackagesImg,
+  fullCollection: fullCollectionImg,
+  dogFood3kg: dogFood3kgImg,
+  catFood3kg: catFood3kgImg,
+  wetFoodCans: wetFoodCansImg,
 };
 
 export const PRODUCTS: ProductItem[] = [
-  // ==================== DOG FOOD ====================
+  // ==================== FLAGSHIP 3KG PACKS & HERO PRODUCTS ====================
+  {
+    id: 'dog-premium-3kg',
+    name: 'PETSHOP Premium Dog Food (3 kg)',
+    category: 'chicken-rice',
+    petType: 'dog',
+    petTypeLabel: 'For All Adult Dog Breeds',
+    packSize: '3 kg',
+    shortDescription: 'Complete & Balanced Nutrition crafted with Real Chicken, High Protein, and essential vitamins for strong bones, healthy digestion & shiny coat.',
+    longDescription: 'Petshop Premium Dog Food delivers an uncompromising blend of wholesome farm-raised chicken, vital amino acids, and essential fatty acids. Formulated in deep red and warm cream packaging with a proud Golden Retriever visual, it provides everything your canine companion needs for long-lasting energy and vitality.',
+    ageCategory: 'Adult (1–7 Years)',
+    ingredients: ['Real Deboned Chicken', 'Whole Brown Rice', 'Chicken Protein Meal', 'Sweet Potatoes', 'Fresh Carrots', 'Flaxseed Oil', 'Probiotic Complex', 'Chelated Minerals'],
+    mainProtein: 'Real Cage-Free Chicken',
+    proteinPercentage: '32% High Protein',
+    fatPercentage: '16% Healthy Fats',
+    fiberPercentage: '3.8% Crude Fiber',
+    moisturePercentage: '10% Max Moisture',
+    benefits: [
+      'Real Chicken & High Protein',
+      'Strong Bones & Healthy Digestion',
+      'Shiny Coat & Daily Vitality',
+      'Veterinarian Approved Quality Seal'
+    ],
+    packageImage: dogFood3kgImg,
+    petImage: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=600&q=80', // Golden Retriever
+    bagColor: 'red',
+    guaranteedAnalysis: [
+      { label: 'Crude Protein (Min)', value: '32.0%' },
+      { label: 'Crude Fat (Min)', value: '16.0%' },
+      { label: 'Crude Fiber (Max)', value: '3.8%' },
+      { label: 'Moisture (Max)', value: '10.0%' },
+      { label: 'Calcium (Min)', value: '1.4%' },
+      { label: 'Omega-6 (Min)', value: '3.2%' },
+      { label: 'Omega-3 (Min)', value: '0.8%' }
+    ],
+    feedingGuideGrams: [
+      { weightRange: '2 – 5 kg (5–11 lbs)', dailyGrams: '50 – 95 g', cupsPerDay: '1/2 – 1 cup' },
+      { weightRange: '5 – 10 kg (11–22 lbs)', dailyGrams: '95 – 160 g', cupsPerDay: '1 – 1 2/3 cups' },
+      { weightRange: '10 – 25 kg (22–55 lbs)', dailyGrams: '160 – 320 g', cupsPerDay: '1 2/3 – 3 1/3 cups' },
+      { weightRange: '25 – 45 kg (55–100 lbs)', dailyGrams: '320 – 500 g', cupsPerDay: '3 1/3 – 5 cups' }
+    ]
+  },
+  {
+    id: 'cat-premium-3kg',
+    name: 'PETSHOP Premium Cat Food (3 kg)',
+    category: 'adult',
+    petType: 'cat',
+    petTypeLabel: 'For All Adult Cat Breeds',
+    packSize: '3 kg',
+    shortDescription: 'Complete & Balanced Nutrition featuring Real Chicken, High Protein, Healthy Heart Taurine, Healthy Digestion, and radiant coat luster.',
+    longDescription: 'Petshop Premium Cat Food in golden yellow and warm cream packaging is specially formulated for felines. Enriched with real poultry, vital Taurine for cardiovascular support, and controlled urinary minerals to keep your cat active, sleek, and happy.',
+    ageCategory: 'Adult (1–7 Years)',
+    ingredients: ['Real Chicken', 'Turkey Meal', 'Ocean Salmon Oil', 'Cranberry Extract', 'Taurine', 'Prebiotics FOS', 'Vitamin E & Zinc'],
+    mainProtein: 'Real Farm Chicken',
+    proteinPercentage: '36% High Protein',
+    fatPercentage: '17% Nutrient Fat',
+    fiberPercentage: '3.0% Gentle Fiber',
+    moisturePercentage: '9.0% Max Moisture',
+    benefits: [
+      'Real Chicken & High Protein',
+      'Healthy Heart with Essential Taurine',
+      'Healthy Digestion & Shiny Coat',
+      'Balanced Urinary Tract Support'
+    ],
+    packageImage: catFood3kgImg,
+    petImage: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80', // Tabby Cat
+    bagColor: 'gold',
+    guaranteedAnalysis: [
+      { label: 'Crude Protein (Min)', value: '36.0%' },
+      { label: 'Crude Fat (Min)', value: '17.0%' },
+      { label: 'Taurine (Min)', value: '0.25%' },
+      { label: 'Crude Fiber (Max)', value: '3.0%' },
+      { label: 'Moisture (Max)', value: '9.0%' },
+      { label: 'Magnesium (Max)', value: '0.08%' }
+    ],
+    feedingGuideGrams: [
+      { weightRange: '2 – 4 kg (4.5–9 lbs)', dailyGrams: '40 – 60 g', cupsPerDay: '1/3 – 1/2 cup' },
+      { weightRange: '4 – 6 kg (9–13 lbs)', dailyGrams: '60 – 80 g', cupsPerDay: '1/2 – 2/3 cup' },
+      { weightRange: '6 – 8 kg (13–18 lbs)', dailyGrams: '80 – 100 g', cupsPerDay: '2/3 – 3/4 cup' }
+    ]
+  },
+  {
+    id: 'dog-chicken-chunks-can',
+    name: 'PETSHOP Chicken Chunks Wet Food (400g Can)',
+    category: 'wet-food',
+    petType: 'dog',
+    petTypeLabel: 'Wet Food for Dogs & Puppies',
+    packSize: '400g',
+    shortDescription: 'Tender real chicken chunks slow-cooked in savory broth for maximum aroma, natural hydration, and irresistible mealtime flavor.',
+    longDescription: 'Petshop Chicken Chunks 400g can brings real meat gastronomy to your dog’s bowl. Made in red and cream packaging with zero fillers, it can be served as a complete meal or mixed with dry kibble for enhanced palatability.',
+    ageCategory: 'All Life Stages',
+    ingredients: ['Fresh Chicken', 'Chicken Broth', 'Liver', 'Sweet Potato Starch', 'Vitamins & Minerals', 'Natural Gelling Agents'],
+    mainProtein: 'Fresh Slow-Cooked Chicken',
+    proteinPercentage: '11% Wet Protein (45% Dry Basis)',
+    fatPercentage: '6.5% Healthy Fats',
+    fiberPercentage: '1.2% Fiber',
+    moisturePercentage: '78% Hydration Moisture',
+    benefits: [
+      'Real Slow-Cooked Chicken Chunks',
+      'Boosts Daily Hydration & Satiety',
+      'Rich Savory Broth Gravy',
+      'Great for Picky Eaters'
+    ],
+    packageImage: wetFoodCansImg,
+    petImage: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80',
+    bagColor: 'red',
+    guaranteedAnalysis: [
+      { label: 'Crude Protein (Min)', value: '11.0%' },
+      { label: 'Crude Fat (Min)', value: '6.5%' },
+      { label: 'Moisture (Max)', value: '78.0%' }
+    ],
+    feedingGuideGrams: [
+      { weightRange: '2 – 5 kg', dailyGrams: '200 – 350 g', cupsPerDay: '1/2 – 1 can' },
+      { weightRange: '5 – 15 kg', dailyGrams: '350 – 750 g', cupsPerDay: '1 – 2 cans' },
+      { weightRange: '15 – 30 kg', dailyGrams: '750 – 1200 g', cupsPerDay: '2 – 3 cans' }
+    ]
+  },
+  {
+    id: 'cat-tuna-chunks-can',
+    name: 'PETSHOP Tuna Chunks Wet Food (400g Can)',
+    category: 'wet-food',
+    petType: 'cat',
+    petTypeLabel: 'Wet Food for Cats & Kittens',
+    packSize: '400g',
+    shortDescription: 'Delicate wild tuna chunks simmered in a light, savory jelly rich in natural Omega-3s and Taurine for optimal feline kidney health.',
+    longDescription: 'Petshop Tuna Chunks 400g can in golden yellow packaging provides delicate moisture-rich nutrition that mimics a feline’s natural prey hydration. Packed with whole tuna cuts and fortified with essential amino acids.',
+    ageCategory: 'All Life Stages',
+    ingredients: ['Wild Tuna Red Meat', 'Tuna Broth', 'Taurine', 'Vitamin E', 'Natural Gelling Jelly'],
+    mainProtein: 'Wild Caught Tuna Chunks',
+    proteinPercentage: '12% Wet Protein (48% Dry Basis)',
+    fatPercentage: '3.0% Marine Fats',
+    fiberPercentage: '0.8% Fiber',
+    moisturePercentage: '81% Hydration Moisture',
+    benefits: [
+      'Wild Tuna Flakes in Savory Jelly',
+      'Critical Hydration for Kidney Health',
+      'High Natural Taurine & Omega-3',
+      'Irresistible Taste for Gourmet Cats'
+    ],
+    packageImage: wetFoodCansImg,
+    petImage: 'https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=600&q=80',
+    bagColor: 'gold',
+    guaranteedAnalysis: [
+      { label: 'Crude Protein (Min)', value: '12.0%' },
+      { label: 'Crude Fat (Min)', value: '3.0%' },
+      { label: 'Taurine (Min)', value: '0.15%' },
+      { label: 'Moisture (Max)', value: '81.0%' }
+    ],
+    feedingGuideGrams: [
+      { weightRange: '1 – 3 kg', dailyGrams: '100 – 200 g', cupsPerDay: '1/4 – 1/2 can' },
+      { weightRange: '3 – 5 kg', dailyGrams: '200 – 350 g', cupsPerDay: '1/2 – 1 can' },
+      { weightRange: '5 – 7 kg', dailyGrams: '350 – 450 g', cupsPerDay: '1 – 1 1/4 cans' }
+    ]
+  },
+
+  // ==================== DRY DOG FOOD ====================
   {
     id: 'dog-chicken-rice',
     name: 'PETSHOP Classic Chicken & Whole Brown Rice',
     category: 'chicken-rice',
     petType: 'dog',
     petTypeLabel: 'For Adult Dogs',
+    packSize: '3 kg / 1.2 kg',
     shortDescription: 'Farm-raised fresh chicken paired with digestible whole grains and essential vitamins for peak daily energy and active muscle maintenance.',
     longDescription: 'Crafted specifically for adult dogs of all breeds, PETSHOP Classic Chicken & Whole Brown Rice provides clean, wholesome nourishment. Real deboned chicken is our #1 ingredient, providing high-quality protein needed for lean muscle tissue.',
     ageCategory: 'Adult (1–7 Years)',
