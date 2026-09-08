@@ -20,7 +20,11 @@ import { WhatsAppButton } from './components/WhatsAppButton';
 import { ScrollToTop } from './components/ScrollToTop';
 import { PrivacyPolicyPage } from './components/PrivacyPolicyPage';
 import { TermsAndConditionsPage } from './components/TermsAndConditionsPage';
-import { ProductItem } from './types';
+import { BlogSection } from './components/BlogSection';
+import { BlogListingPage } from './components/BlogListingPage';
+import { BlogArticlePage } from './components/BlogArticlePage';
+import { ProductItem, BlogPost } from './types';
+import { BLOG_POSTS } from './data/blogData';
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState<string>(() => {
@@ -30,6 +34,7 @@ export default function App() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [calculatorOpen, setCalculatorOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
+  const [selectedBlog, setSelectedBlog] = useState<BlogPost | null>(null);
 
   // Sync route path changes via popstate
   useEffect(() => {
@@ -39,6 +44,12 @@ export default function App() {
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
+
+  // Resolve current blog post from selected state or current URL pathname
+  const activeBlogPost =
+    selectedBlog ||
+    BLOG_POSTS.find((b) => `/blog/${b.slug}` === currentPath) ||
+    (currentPath.startsWith('/blog/') ? BLOG_POSTS[0] : null);
 
   // Track active landing section on scroll if on home route
   useEffect(() => {
@@ -55,6 +66,7 @@ export default function App() {
         'products',
         'why-us',
         'benefits',
+        'pet-care-blog',
         'testimonials',
         'faq',
         'contact',
@@ -119,6 +131,24 @@ export default function App() {
           onBackToHome={(sec) => handleNavigate('/', sec)}
           onNavigatePrivacy={() => handleNavigate('/privacy-policy')}
         />
+      ) : currentPath === '/blogs' ? (
+        <BlogListingPage
+          onBackToHome={(sec) => handleNavigate('/', sec)}
+          onSelectBlog={(blog) => {
+            setSelectedBlog(blog);
+            handleNavigate(`/blog/${blog.slug}`);
+          }}
+        />
+      ) : currentPath.startsWith('/blog/') && activeBlogPost ? (
+        <BlogArticlePage
+          blog={activeBlogPost}
+          onBackToBlogs={() => handleNavigate('/blogs')}
+          onBackToHome={(sec) => handleNavigate('/', sec)}
+          onSelectRelatedBlog={(blog) => {
+            setSelectedBlog(blog);
+            handleNavigate(`/blog/${blog.slug}`);
+          }}
+        />
       ) : (
         <>
           {/* HERO SECTION */}
@@ -152,6 +182,15 @@ export default function App() {
           {/* CAT FOOD SPOTLIGHT */}
           <CatFoodSection
             onOpenCalculator={() => setCalculatorOpen(true)}
+          />
+
+          {/* PET CARE BLOG SECTION */}
+          <BlogSection
+            onSelectBlog={(blog) => {
+              setSelectedBlog(blog);
+              handleNavigate(`/blog/${blog.slug}`);
+            }}
+            onViewAllBlogs={() => handleNavigate('/blogs')}
           />
 
           {/* TESTIMONIALS */}

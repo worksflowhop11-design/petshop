@@ -33,6 +33,7 @@ export const Header: React.FC<HeaderProps> = ({
     { label: 'Products', href: '#products' },
     { label: 'Why PETSHOP', href: '#why-us' },
     { label: 'Benefits', href: '#benefits' },
+    { label: 'Pet Care Blog', href: '#pet-care-blog' },
     { label: 'Testimonials', href: '#testimonials' },
     { label: 'FAQ', href: '#faq' },
     { label: 'Contact', href: '#contact' },
@@ -109,7 +110,7 @@ export const Header: React.FC<HeaderProps> = ({
             </a>
 
             {/* DESKTOP NAV */}
-            <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
+            <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1.5 2xl:gap-2">
               {navLinks.map((link) => {
                 const isActive = currentPath === '/' && activeSection === link.href.replace('#', '');
                 return (
@@ -117,7 +118,7 @@ export const Header: React.FC<HeaderProps> = ({
                     key={link.label}
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
-                    className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer ${
+                    className={`px-2 xl:px-2.5 2xl:px-3 py-1.5 rounded-full text-xs xl:text-sm font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
                       isActive
                         ? 'bg-[#D62828] text-white shadow-sm'
                         : 'text-[#2B2B2B] hover:text-[#D62828] hover:bg-[#FFE8A3]/40'

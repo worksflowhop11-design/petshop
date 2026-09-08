@@ -56,7 +56,8 @@ export const HeroSection: React.FC = () => {
               }`}
             >
               Premium Nutrition <br className="hidden sm:block" />
-              For <span className="text-[#D62828]">Happy Dogs</span> &amp;{' '}
+              For <span className="text-[#F4C430]">Happy</span>{' '}
+              <span className="text-[#D62828]">Dogs</span> &amp;{' '}
               <span className="text-[#F4C430]">Cats</span>
             </h1>
 

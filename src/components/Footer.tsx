@@ -151,6 +151,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   Our Benefits
                 </button>
               </li>
+              <li>
+                <button onClick={() => handleSectionNav('#pet-care-blog')} className="hover:text-[#F4C430] transition-colors cursor-pointer font-bold text-white">
+                  Pet Care Blog
+                </button>
+              </li>
             </ul>
           </div>
 

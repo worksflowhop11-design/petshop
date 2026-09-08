@@ -63,3 +63,40 @@ export interface FaqItem {
   answer: string;
   category: 'general' | 'dogs' | 'cats' | 'nutrition';
 }
+
+export type BlogCategory =
+  | 'Dog Care'
+  | 'Cat Care'
+  | 'Pet Nutrition'
+  | 'Grooming'
+  | 'Pet Health'
+  | 'Pet Lifestyle'
+  | 'Training & Behavior';
+
+export interface BlogPost {
+  id: string;
+  slug: string;
+  category: BlogCategory;
+  title: string;
+  description: string;
+  image: string;
+  imageAlt: string;
+  publishDate: string;
+  readTime: string;
+  author: {
+    name: string;
+    role: string;
+    avatar?: string;
+  };
+  featured?: boolean;
+  content: {
+    intro: string;
+    sections: {
+      heading: string;
+      body: string;
+      bulletPoints?: string[];
+    }[];
+    conclusion: string;
+    keyTakeaways?: string[];
+  };
+}
