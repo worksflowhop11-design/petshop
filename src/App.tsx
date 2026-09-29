@@ -25,6 +25,7 @@ import { BlogListingPage } from './components/BlogListingPage';
 import { BlogArticlePage } from './components/BlogArticlePage';
 import { ProductItem, BlogPost } from './types';
 import { BLOG_POSTS } from './data/blogData';
+import { trackPageView } from './utils/analytics';
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState<string>(() => {
@@ -50,6 +51,23 @@ export default function App() {
     selectedBlog ||
     BLOG_POSTS.find((b) => `/blog/${b.slug}` === currentPath) ||
     (currentPath.startsWith('/blog/') ? BLOG_POSTS[0] : null);
+
+  // Google Analytics 4: Track page_view on initial load and client-side route changes
+  useEffect(() => {
+    let title = 'PETSHOP - Premium Natural Pet Food for Dogs & Cats';
+    if (currentPath === '/privacy-policy') {
+      title = 'Privacy Policy | PETSHOP';
+    } else if (currentPath === '/terms-and-conditions') {
+      title = 'Terms & Conditions | PETSHOP';
+    } else if (currentPath === '/blogs') {
+      title = 'Pet Care Blog & Nutrition Guides | PETSHOP';
+    } else if (currentPath.startsWith('/blog/') && activeBlogPost) {
+      title = `${activeBlogPost.title} | PETSHOP Blog`;
+    }
+
+    document.title = title;
+    trackPageView(currentPath, title);
+  }, [currentPath, activeBlogPost]);
 
   // Track active landing section on scroll if on home route
   useEffect(() => {
