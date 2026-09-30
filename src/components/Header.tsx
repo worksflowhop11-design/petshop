@@ -21,7 +21,7 @@ export const Header: React.FC<HeaderProps> = ({
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -56,146 +56,130 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <div className="sticky top-0 z-50">
-      {/* TOP HEADER CONTACT BAR */}
-      <div className="bg-[#1E4DB7] text-white min-h-[40px] px-4 sm:px-6 lg:px-8 flex items-center justify-between text-xs sm:text-sm font-medium transition-all duration-300 border-b border-white/10">
-        <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
-          {/* Left Side Phone */}
+    <div className="sticky top-0 z-50 w-full max-w-full">
+      {/* 1. TOP ROYAL BLUE CONTACT BAR (~46px high) */}
+      <div className="w-full bg-[#0755B8] text-white h-[46px] px-4 sm:px-8 lg:px-12 xl:px-16 flex items-center justify-between text-xs sm:text-sm font-medium border-b border-white/10 select-none">
+        <div className="w-full max-w-7xl mx-auto flex items-center justify-between">
+          {/* Left: Phone */}
           <a
             href="tel:18002703585"
-            className="flex items-center gap-2 hover:text-[#F4C430] transition-colors duration-200 py-2 group cursor-pointer"
+            className="flex items-center gap-2 hover:text-[#FFC21C] transition-colors py-1 group cursor-pointer"
           >
-            <Phone className="w-4 h-4 text-white group-hover:text-[#F4C430] transition-colors" />
-            <span className="font-semibold tracking-wide">1800-270-3585</span>
+            <Phone className="w-4 h-4 text-white group-hover:text-[#FFC21C] transition-colors shrink-0" />
+            <span className="font-semibold tracking-wide text-xs sm:text-sm">1800-270-3585</span>
           </a>
 
-          {/* Right Side Email */}
+          {/* Right: Email */}
           <a
             href="mailto:petshop@gmail.com"
-            className="flex items-center gap-2 hover:text-[#F4C430] transition-colors duration-200 py-2 group cursor-pointer"
+            className="flex items-center gap-2 hover:text-[#FFC21C] transition-colors py-1 group cursor-pointer"
           >
-            <Mail className="w-4 h-4 text-white group-hover:text-[#F4C430] transition-colors" />
-            <span className="font-semibold tracking-wide">petshop@gmail.com</span>
+            <Mail className="w-4 h-4 text-white group-hover:text-[#FFC21C] transition-colors shrink-0" />
+            <span className="font-semibold tracking-wide text-xs sm:text-sm">petshop@gmail.com</span>
           </a>
         </div>
       </div>
 
-      {/* MAIN NAVIGATION HEADER */}
+      {/* 2. MAIN WHITE NAVIGATION BAR (~90-100px high with subtle bottom shadow) */}
       <header
-        className={`transition-all duration-300 ${
-          isScrolled
-            ? 'bg-[#FFFDF8]/95 backdrop-blur-md shadow-md py-3 border-b border-[#FFE8A3]'
-            : 'bg-[#FFFDF8] py-4 border-b border-[#FFE8A3]/50'
+        className={`w-full bg-white h-[85px] lg:h-[95px] xl:h-[100px] transition-all duration-300 border-b border-[#FFE8A3]/40 ${
+          isScrolled ? 'shadow-[0_6px_25px_rgba(0,0,0,0.08)]' : 'shadow-[0_4px_20px_rgba(0,0,0,0.05)]'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            {/* LOGO */}
-            <a
-              href="#hero"
-              onClick={(e) => handleNavClick(e, '#hero')}
-              className="flex items-center gap-2.5 group cursor-pointer"
-            >
-              <div className="w-10 h-10 rounded-full bg-[#D62828] flex items-center justify-center text-white shadow-md group-hover:bg-[#1E4DB7] group-hover:text-white transition-colors duration-300">
-                <PawPrint className="w-6 h-6 fill-current" />
-              </div>
-              <div>
-                <span className="text-2xl font-extrabold tracking-tight text-[#2B2B2B] flex items-center gap-1 font-sans">
-                  PET<span className="text-[#D62828]">SHOP</span>
-                </span>
-                <span className="text-[10px] uppercase tracking-wider font-bold text-[#D62828] block -mt-1">
-                  Healthy Pets, Happy Life
-                </span>
-              </div>
-            </a>
-
-            {/* DESKTOP NAV */}
-            <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1.5 2xl:gap-2">
-              {navLinks.map((link) => {
-                const isActive = currentPath === '/' && activeSection === link.href.replace('#', '');
-                return (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    onClick={(e) => handleNavClick(e, link.href)}
-                    className={`px-2 xl:px-2.5 2xl:px-3 py-1.5 rounded-full text-xs xl:text-sm font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
-                      isActive
-                        ? 'bg-[#D62828] text-white shadow-sm'
-                        : 'text-[#2B2B2B] hover:text-[#D62828] hover:bg-[#FFE8A3]/40'
-                    }`}
-                  >
-                    {link.label}
-                  </a>
-                );
-              })}
-            </nav>
-
-            {/* ACTIONS: SEARCH ICON ONLY */}
-            <div className="flex items-center gap-3">
-              <button
-                onClick={onOpenSearch}
-                className="p-2.5 rounded-full bg-[#FFE8A3]/50 text-[#2B2B2B] hover:bg-[#D62828] hover:text-white transition-all duration-200 shadow-sm flex items-center gap-2 text-sm font-medium cursor-pointer"
-                title="Search Pet Food Formulas"
-                aria-label="Search"
-              >
-                <Search className="w-5 h-5" />
-                <span className="hidden sm:inline-block text-xs font-bold uppercase tracking-wider pr-1">
-                  Search Food
-                </span>
-              </button>
-
-              {/* MOBILE MENU TOGGLE */}
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2 rounded-lg text-[#2B2B2B] hover:bg-[#FFE8A3]/60 focus:outline-none cursor-pointer"
-                aria-label="Toggle menu"
-              >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
+        <div className="w-full max-w-[1560px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 h-full flex items-center justify-between gap-2 sm:gap-4">
+          
+          {/* BRAND LOGO */}
+          <a
+            href="#hero"
+            onClick={(e) => handleNavClick(e, '#hero')}
+            className="flex items-center gap-2.5 sm:gap-3 shrink-0 cursor-pointer group"
+          >
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#EE1630] flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform duration-300 shrink-0">
+              <PawPrint className="w-5 h-5 sm:w-6 sm:h-6 fill-current text-white" />
             </div>
+            <div className="text-left">
+              <span className="text-xl sm:text-2xl xl:text-[25px] font-black tracking-tight text-[#061B3A] block font-sans leading-none">
+                PET<span className="text-[#EE1630]">SHOP</span>
+              </span>
+              <span className="text-[9px] sm:text-[10px] uppercase tracking-wider font-extrabold text-[#EE1630] block mt-0.5 whitespace-nowrap">
+                HEALTHY PETS, HAPPY LIFE
+              </span>
+            </div>
+          </a>
+
+          {/* DESKTOP NAVIGATION LINKS (Single row, responsive at 1366px, Home as red pill) */}
+          <nav className="hidden min-[1140px]:flex items-center gap-1 xl:gap-2 2xl:gap-3 shrink">
+            {navLinks.map((link) => {
+              const isHome = link.label === 'Home';
+              const isHomeActive = isHome && (activeSection === 'hero' || currentPath === '/');
+              const isOtherActive = currentPath === '/' && activeSection === link.href.replace('#', '') && !isHome;
+
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
+                  className={`whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                    isHomeActive
+                      ? 'bg-[#EE1630] text-white px-3.5 xl:px-4 py-1.5 xl:py-2 rounded-full font-bold text-xs xl:text-[13px] 2xl:text-[14px] shadow-sm hover:bg-[#D61429]'
+                      : isOtherActive
+                      ? 'text-[#EE1630] font-black text-xs xl:text-[13px] 2xl:text-[14px] px-1.5 xl:px-2 py-1'
+                      : 'text-[#061B3A] hover:text-[#EE1630] font-semibold text-xs xl:text-[13px] 2xl:text-[14px] px-1.5 xl:px-2 py-1'
+                  }`}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
+          </nav>
+
+          {/* RIGHT ACTION: PALE YELLOW "SEARCH FOOD" BUTTON */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <button
+              onClick={onOpenSearch}
+              className="flex items-center gap-2 px-3.5 sm:px-4 xl:px-5 py-2 sm:py-2.5 rounded-full bg-[#FFE082] hover:bg-[#FFD54F] text-[#061B3A] font-black text-xs xl:text-xs tracking-wider uppercase shadow-xs hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer whitespace-nowrap"
+              title="Search Pet Food Formulas"
+              aria-label="Search Food"
+            >
+              <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#061B3A] stroke-[2.5] shrink-0" />
+              <span className="hidden xs:inline sm:inline">SEARCH FOOD</span>
+            </button>
+
+            {/* Tablet & Mobile Hamburger Toggle */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="min-[1140px]:hidden p-2 rounded-xl text-[#061B3A] hover:bg-slate-100 transition-colors cursor-pointer"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
 
-          {/* MOBILE MENU DROPDOWN */}
-          {mobileMenuOpen && (
-            <div className="lg:hidden mt-3 pt-3 pb-4 border-t border-[#FFE8A3] bg-[#FFFDF8] rounded-b-2xl shadow-lg px-2 space-y-1">
-              <div className="flex flex-col gap-1">
-                {navLinks.map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    onClick={(e) => handleNavClick(e, link.href)}
-                    className="px-4 py-2.5 rounded-xl text-base font-semibold text-[#2B2B2B] hover:bg-[#D62828] hover:text-white transition-colors cursor-pointer"
-                  >
-                    {link.label}
-                  </a>
-                ))}
-              </div>
-
-              {/* MOBILE LEGAL LINKS */}
-              <div className="pt-3 border-t border-[#FFE8A3]/60 flex flex-col gap-1">
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    if (onNavigate) onNavigate('/privacy-policy');
-                  }}
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-[#D62828] hover:bg-[#FFE8A3]/40 text-left cursor-pointer"
-                >
-                  Privacy Policy
-                </button>
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    if (onNavigate) onNavigate('/terms-and-conditions');
-                  }}
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-[#D62828] hover:bg-[#FFE8A3]/40 text-left cursor-pointer"
-                >
-                  Terms &amp; Conditions
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       </header>
+
+      {/* MOBILE & TABLET DRAWER NAV */}
+      {mobileMenuOpen && (
+        <div className="min-[1140px]:hidden bg-white/98 backdrop-blur-md border-b border-[#FFE8A3] shadow-xl px-6 py-6 space-y-2 animate-fadeIn max-h-[75vh] overflow-y-auto">
+          {navLinks.map((link) => {
+            const isActive = currentPath === '/' && activeSection === link.href.replace('#', '');
+            return (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className={`block px-4 py-2.5 rounded-xl font-bold text-sm sm:text-base transition-colors ${
+                  isActive
+                    ? 'bg-[#EE1630] text-white'
+                    : 'text-[#061B3A] hover:bg-[#FFE082]/30 hover:text-[#EE1630]'
+                }`}
+              >
+                {link.label}
+              </a>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

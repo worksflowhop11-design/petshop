@@ -26,9 +26,11 @@ import dogFood3kgImg from '../assets/images/petshop_dog_food_3kg_pkg_17878393583
 import catFood3kgImg from '../assets/images/petshop_cat_food_3kg_pkg_1787839380110.jpg';
 import wetFoodCansImg from '../assets/images/petshop_wet_food_cans_pkg_1787839401447.jpg';
 import productsBannerPetsImg from '../assets/images/petshop_products_banner_pets_1787841459189.jpg';
+import heroPetsWideMasterpieceImg from '../assets/images/petshop_hero_wide_masterpiece_1790747638405.jpg';
 
 export const ASSETS = {
-  heroBanner: heroBannerImg,
+  heroBanner: heroPetsWideMasterpieceImg,
+  heroPetsShowcase: heroPetsWideMasterpieceImg,
   dogFood: dogFoodImg,
   catFood: catFoodImg,
   aboutPackages: aboutPackagesImg,
