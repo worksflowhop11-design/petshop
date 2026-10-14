@@ -1,0 +1,166 @@
+{
+  "entities": {
+    "Admin": {
+      "title": "Admin",
+      "description": "Administrator account metadata",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "role": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["email", "role"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Pet food product entity",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "productCode": { "type": "string" },
+        "category": { "type": "string" },
+        "petType": { "type": "string" },
+        "productType": { "type": "string" },
+        "shortDescription": { "type": "string" },
+        "fullDescription": { "type": "string" },
+        "packageImage": { "type": "string" },
+        "additionalImages": { "type": "string" },
+        "price": { "type": "number" },
+        "salePrice": { "type": "number" },
+        "stockStatus": { "type": "string" },
+        "isFeatured": { "type": "boolean" },
+        "isActive": { "type": "boolean" },
+        "ingredients": { "type": "string" },
+        "benefits": { "type": "string" },
+        "suitableFor": { "type": "string" },
+        "packSize": { "type": "string" },
+        "brand": { "type": "string" },
+        "tags": { "type": "string" }
+      },
+      "required": ["name", "category", "petType"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Product category",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "slug": { "type": "string" },
+        "description": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "isActive": { "type": "boolean" },
+        "petType": { "type": "string" }
+      },
+      "required": ["name", "slug"]
+    },
+    "Blog": {
+      "title": "Blog",
+      "description": "Pet care blog article",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "slug": { "type": "string" },
+        "excerpt": { "type": "string" },
+        "content": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "author": { "type": "string" },
+        "category": { "type": "string" },
+        "publishDate": { "type": "string" },
+        "isPublished": { "type": "boolean" }
+      },
+      "required": ["title", "slug"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "Customer testimonial",
+      "type": "object",
+      "properties": {
+        "customerName": { "type": "string" },
+        "customerPhoto": { "type": "string" },
+        "petName": { "type": "string" },
+        "petType": { "type": "string" },
+        "reviewText": { "type": "string" },
+        "rating": { "type": "number" },
+        "status": { "type": "string" }
+      },
+      "required": ["customerName", "reviewText"]
+    },
+    "WebsiteContent": {
+      "title": "WebsiteContent",
+      "description": "Global website content and settings",
+      "type": "object",
+      "properties": {
+        "heroHeading": { "type": "string" },
+        "heroDescription": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "aboutText": { "type": "string" },
+        "facebookUrl": { "type": "string" },
+        "instagramUrl": { "type": "string" },
+        "twitterUrl": { "type": "string" },
+        "youtubeUrl": { "type": "string" }
+      }
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer order",
+      "type": "object",
+      "properties": {
+        "orderNumber": { "type": "string" },
+        "customerName": { "type": "string" },
+        "customerEmail": { "type": "string" },
+        "totalAmount": { "type": "number" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["orderNumber", "totalAmount"]
+    },
+    "Customer": {
+      "title": "Customer",
+      "description": "Customer record",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "totalOrders": { "type": "number" },
+        "registeredAt": { "type": "string" }
+      },
+      "required": ["name", "email"]
+    }
+  },
+  "firestore": {
+    "/admins/{adminId}": {
+      "schema": "Admin",
+      "description": "Admin users collection"
+    },
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Products collection"
+    },
+    "/categories/{categoryId}": {
+      "schema": "Category",
+      "description": "Product categories"
+    },
+    "/blogs/{blogId}": {
+      "schema": "Blog",
+      "description": "Pet care blog posts"
+    },
+    "/testimonials/{testimonialId}": {
+      "schema": "Testimonial",
+      "description": "Customer testimonials"
+    },
+    "/websiteContent/{contentId}": {
+      "schema": "WebsiteContent",
+      "description": "Website customizable content"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Store orders"
+    },
+    "/customers/{customerId}": {
+      "schema": "Customer",
+      "description": "Customer records"
+    }
+  }
+}

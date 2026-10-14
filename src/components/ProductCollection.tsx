@@ -16,16 +16,19 @@ import {
 } from 'lucide-react';
 
 interface ProductCollectionProps {
-  onSelectProduct: (product: ProductItem) => void;
+  onSelectProduct: (product: any) => void;
+  productsList?: any[];
 }
 
 type FilterTab = 'all' | 'dog' | 'cat' | 'puppy' | 'kitten' | 'wet-food';
 
-export const ProductCollection: React.FC<ProductCollectionProps> = ({ onSelectProduct }) => {
+export const ProductCollection: React.FC<ProductCollectionProps> = ({ onSelectProduct, productsList = [] }) => {
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
+  const sourceProducts = productsList.length > 0 ? productsList : PRODUCTS;
 
   // Filter products based on selected tab
-  const filteredProducts = PRODUCTS.filter((product) => {
+  const filteredProducts = sourceProducts.filter((product) => {
+    if (product.isActive === false) return false;
     if (activeTab === 'all') return true;
     if (activeTab === 'dog') {
       return product.petType === 'dog' && product.category !== 'wet-food';
@@ -34,13 +37,13 @@ export const ProductCollection: React.FC<ProductCollectionProps> = ({ onSelectPr
       return product.petType === 'cat' && product.category !== 'wet-food';
     }
     if (activeTab === 'puppy') {
-      return product.category === 'puppy' || product.id.includes('puppy');
+      return product.category === 'puppy' || product.category === 'puppy-food' || product.id?.includes('puppy');
     }
     if (activeTab === 'kitten') {
-      return product.category === 'kitten' || product.id.includes('kitten');
+      return product.category === 'kitten' || product.category === 'kitten-food' || product.id?.includes('kitten');
     }
     if (activeTab === 'wet-food') {
-      return product.category === 'wet-food' || product.id.includes('chunks');
+      return product.category === 'wet-food' || product.id?.includes('chunks');
     }
     return true;
   });

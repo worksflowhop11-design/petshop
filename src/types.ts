@@ -1,4 +1,4 @@
-export type PetType = 'dog' | 'cat';
+export type PetType = 'dog' | 'cat' | 'both';
 
 export type DogSubCategory = 'chicken-rice' | 'lamb-veg' | 'puppy' | 'senior' | 'wet-food';
 export type CatSubCategory = 'kitten' | 'adult' | 'ocean-fish' | 'hairball' | 'wet-food';

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Menu, X, PawPrint, Phone, Mail } from 'lucide-react';
+import { Search, Menu, X, PawPrint, Phone, Mail, Lock } from 'lucide-react';
 
 interface HeaderProps {
   onOpenSearch: () => void;
@@ -133,8 +133,8 @@ export const Header: React.FC<HeaderProps> = ({
             })}
           </nav>
 
-          {/* RIGHT ACTION: PALE YELLOW "SEARCH FOOD" BUTTON */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* RIGHT ACTION: PALE YELLOW "SEARCH FOOD" BUTTON & DISCREET ADMIN LOGIN */}
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             <button
               onClick={onOpenSearch}
               className="flex items-center gap-2 px-3.5 sm:px-4 xl:px-5 py-2 sm:py-2.5 rounded-full bg-[#FFE082] hover:bg-[#FFD54F] text-[#061B3A] font-black text-xs xl:text-xs tracking-wider uppercase shadow-xs hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer whitespace-nowrap"
@@ -144,6 +144,20 @@ export const Header: React.FC<HeaderProps> = ({
               <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#061B3A] stroke-[2.5] shrink-0" />
               <span className="hidden xs:inline sm:inline">SEARCH FOOD</span>
             </button>
+
+            {/* DISCREET ADMIN LOGIN BUTTON */}
+            <a
+              href="/admin/login"
+              onClick={(e) => {
+                e.preventDefault();
+                if (onNavigate) onNavigate('/admin/login');
+              }}
+              className="flex items-center gap-1.5 px-3 py-2 sm:py-2.5 rounded-full bg-white hover:bg-slate-50 text-[#061B3A] border border-[#FFE8A3] hover:border-[#EE1630] font-bold text-xs tracking-wide uppercase shadow-xs hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer whitespace-nowrap"
+              title="Admin Portal Login"
+            >
+              <Lock className="w-3.5 h-3.5 text-[#EE1630]" />
+              <span className="hidden md:inline">Admin</span>
+            </a>
 
             {/* Tablet & Mobile Hamburger Toggle */}
             <button
@@ -178,6 +192,21 @@ export const Header: React.FC<HeaderProps> = ({
               </a>
             );
           })}
+
+          <div className="pt-2 border-t border-slate-100">
+            <a
+              href="/admin/login"
+              onClick={(e) => {
+                e.preventDefault();
+                setMobileMenuOpen(false);
+                if (onNavigate) onNavigate('/admin/login');
+              }}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 text-[#061B3A] hover:bg-[#EE1630] hover:text-white font-bold text-sm transition-colors"
+            >
+              <Lock className="w-4 h-4 text-[#EE1630]" />
+              <span>Admin Portal Login</span>
+            </a>
+          </div>
         </div>
       )}
     </div>

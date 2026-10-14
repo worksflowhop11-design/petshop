@@ -16,28 +16,57 @@ export const HeroSection: React.FC = () => {
       id="hero"
       className="relative w-full max-w-full bg-[#FFFDF8] overflow-hidden min-h-[640px] lg:min-h-[680px] xl:min-h-[720px] 2xl:min-h-[760px] flex flex-col justify-between border-b border-[#FFE8A3]/30"
     >
-      {/* 1. PETS ARTWORK BACKGROUND LAYER (Desktop & Large Screens) */}
-      <div className="hidden lg:block absolute inset-y-0 right-0 w-[58%] xl:w-[56%] 2xl:w-[54%] h-full z-0 pointer-events-none select-none overflow-hidden">
-        <img
-          src={ASSETS.heroBanner}
-          alt="PETSHOP Golden Retriever, Adult Dog and Cat Food Bags, and Tabby Cat"
-          loading="eager"
-          fetchPriority="high"
-          referrerPolicy="no-referrer"
-          className="w-full h-full object-cover object-[right_center] xl:object-right transform transition-transform duration-700 hover:scale-[1.01]"
-        />
+      {/* ================= 1. PETS ARTWORK BACKGROUND LAYER (Desktop & Large Screens) ================= */}
+      {/* Extends smoothly across the right side with seamless CSS mask fades on left & bottom edges */}
+      <div className="hidden lg:block absolute inset-y-0 right-0 w-[64%] xl:w-[62%] 2xl:w-[60%] h-full z-0 pointer-events-none select-none overflow-hidden">
+        {/* Layer A: Handles soft bottom-edge fade so the floor/jute rug dissolves into the bottom area */}
+        <div
+          className="w-full h-full relative"
+          style={{
+            maskImage:
+              'linear-gradient(to top, transparent 0%, rgba(0,0,0,0.12) 3%, rgba(0,0,0,0.65) 9%, black 17%)',
+            WebkitMaskImage:
+              'linear-gradient(to top, transparent 0%, rgba(0,0,0,0.12) 3%, rgba(0,0,0,0.65) 9%, black 17%)',
+          }}
+        >
+          {/* Layer B: Handles smooth left-edge dissolve so the image gradually emerges from the white/cream background */}
+          <div
+            className="w-full h-full relative"
+            style={{
+              maskImage:
+                'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.04) 5%, rgba(0,0,0,0.2) 12%, rgba(0,0,0,0.6) 20%, rgba(0,0,0,0.92) 28%, black 35%)',
+              WebkitMaskImage:
+                'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.04) 5%, rgba(0,0,0,0.2) 12%, rgba(0,0,0,0.6) 20%, rgba(0,0,0,0.92) 28%, black 35%)',
+            }}
+          >
+            <img
+              src={ASSETS.heroBanner}
+              alt="PETSHOP Golden Retriever, Adult Dog and Cat Food Bags, and Tabby Cat"
+              loading="eager"
+              fetchPriority="high"
+              referrerPolicy="no-referrer"
+              className="w-full h-full object-cover object-[right_center] xl:object-right transform transition-transform duration-700 hover:scale-[1.01]"
+            />
+
+            {/* Seamless Left Edge Gradient Overlay in Hero Background Color (#FFFDF8) */}
+            <div className="absolute inset-y-0 left-0 w-36 xl:w-52 bg-gradient-to-r from-[#FFFDF8] via-[#FFFDF8]/75 to-transparent pointer-events-none" />
+
+            {/* Seamless Bottom Edge Gradient Overlay */}
+            <div className="absolute inset-x-0 bottom-0 h-16 xl:h-24 bg-gradient-to-t from-[#FFFDF8] via-[#FFFDF8]/60 to-transparent pointer-events-none" />
+
+            {/* Subtle top-right corner soft radial fade */}
+            <div
+              className="absolute top-0 right-0 w-48 h-48 pointer-events-none"
+              style={{
+                background:
+                  'radial-gradient(circle at top right, rgba(255, 253, 248, 0.4) 0%, rgba(255, 253, 248, 0) 70%)',
+              }}
+            />
+          </div>
+        </div>
       </div>
 
-      {/* 2. DEDICATED FULL-SIZE SMOOTH FADE OVERLAY LAYER (No grey strips, no hard seams) */}
-      <div
-        className="hidden lg:block absolute inset-0 z-10 pointer-events-none"
-        style={{
-          background:
-            'linear-gradient(to right, #FFFDF8 0%, #FFFDF8 36%, rgba(255, 253, 248, 0.94) 44%, rgba(255, 253, 248, 0.72) 52%, rgba(255, 253, 248, 0.3) 62%, rgba(255, 253, 248, 0) 70%, rgba(255, 253, 248, 0) 100%)',
-        }}
-      />
-
-      {/* 3. MAIN HERO CONTENT CONTAINER (Stable Responsive Flexbox, No Absolute Clipping) */}
+      {/* ================= 2. MAIN HERO CONTENT CONTAINER (Stable Responsive Flexbox) ================= */}
       <div className="w-full max-w-[1560px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 pt-8 sm:pt-10 lg:pt-14 xl:pt-16 pb-12 sm:pb-16 lg:pb-20 relative z-20 flex-1 flex flex-col justify-center">
         
         {/* LEFT CONTENT COLUMN */}
@@ -51,7 +80,7 @@ export const HeroSection: React.FC = () => {
             </div>
           </div>
 
-          {/* THREE-LINE HEADING WITH CLAMP() SIZING (Never cut off) */}
+          {/* THREE-LINE HEADING WITH CLAMP() SIZING */}
           <h1
             className="font-black tracking-tight leading-[1.07] text-[#061B3A]"
             style={{ fontSize: 'clamp(2.2rem, 3.6vw, 4.25rem)' }}
@@ -107,9 +136,17 @@ export const HeroSection: React.FC = () => {
 
         </div>
 
-        {/* TABLET & MOBILE VISUAL (Stacked below text, never clipped) */}
-        <div className="lg:hidden w-full pt-8 pb-4">
-          <div className="w-full relative h-[320px] sm:h-[420px] md:h-[480px] rounded-2xl overflow-hidden shadow-md">
+        {/* ================= TABLET & MOBILE VISUAL (Stacked below text, softly emerging from background) ================= */}
+        <div className="lg:hidden w-full pt-6 pb-2">
+          <div
+            className="w-full relative h-[320px] sm:h-[420px] md:h-[480px] overflow-hidden"
+            style={{
+              maskImage:
+                'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.15) 3%, black 12%, black 88%, rgba(0,0,0,0.15) 97%, transparent 100%), linear-gradient(to right, transparent 0%, rgba(0,0,0,0.2) 3%, black 10%, black 90%, rgba(0,0,0,0.2) 97%, transparent 100%)',
+              WebkitMaskImage:
+                'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.15) 3%, black 12%, black 88%, rgba(0,0,0,0.15) 97%, transparent 100%), linear-gradient(to right, transparent 0%, rgba(0,0,0,0.2) 3%, black 10%, black 90%, rgba(0,0,0,0.2) 97%, transparent 100%)',
+            }}
+          >
             <img
               src={ASSETS.heroBanner}
               alt="PETSHOP Golden Retriever, Food Bags, and Tabby Cat"
@@ -117,12 +154,15 @@ export const HeroSection: React.FC = () => {
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover object-right"
             />
+            {/* Soft gradient fades for top and bottom blending on mobile */}
+            <div className="absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-[#FFFDF8] via-[#FFFDF8]/70 to-transparent pointer-events-none" />
+            <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#FFFDF8] via-[#FFFDF8]/70 to-transparent pointer-events-none" />
           </div>
         </div>
 
       </div>
 
-      {/* 4. LAYERED CREAM-AND-YELLOW BOTTOM WAVE SHAPE */}
+      {/* ================= 3. LAYERED CREAM-AND-YELLOW BOTTOM WAVE SHAPE ================= */}
       <div className="w-full overflow-hidden leading-none pointer-events-none z-20 relative select-none">
         <svg
           viewBox="0 0 1440 100"

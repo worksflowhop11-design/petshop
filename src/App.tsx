@@ -27,7 +27,29 @@ import { ProductItem, BlogPost } from './types';
 import { BLOG_POSTS } from './data/blogData';
 import { trackPageView } from './utils/analytics';
 
-export default function App() {
+// Firebase & Auth imports
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { fetchProducts } from './services/firestoreService';
+import { FirestoreProduct } from './types/admin';
+
+// Admin CMS Components
+import { AdminLoginPage } from './components/admin/AdminLoginPage';
+import { AdminLayout } from './components/admin/AdminLayout';
+import { DashboardHome } from './components/admin/DashboardHome';
+import { ProductManagement } from './components/admin/ProductManagement';
+import { ProductFormPage } from './components/admin/ProductFormPage';
+import { CategoryManagement } from './components/admin/CategoryManagement';
+import { BlogManagement } from './components/admin/BlogManagement';
+import { TestimonialManagement } from './components/admin/TestimonialManagement';
+import { WebsiteContentManagement } from './components/admin/WebsiteContentManagement';
+import { AdminSettings } from './components/admin/AdminSettings';
+import { OrdersManagement } from './components/admin/OrdersManagement';
+import { CustomersManagement } from './components/admin/CustomersManagement';
+import { ProductDetailsPage } from './components/ProductDetailsPage';
+
+function AppContent() {
+  const { isAdmin, loading: authLoading } = useAuth();
+
   const [currentPath, setCurrentPath] = useState<string>(() => {
     return window.location.pathname || '/';
   });
@@ -36,6 +58,22 @@ export default function App() {
   const [calculatorOpen, setCalculatorOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
   const [selectedBlog, setSelectedBlog] = useState<BlogPost | null>(null);
+
+  // Dynamic Firestore products state
+  const [dynamicProducts, setDynamicProducts] = useState<FirestoreProduct[]>([]);
+
+  // Load Firestore products on initial mount
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const prods = await fetchProducts();
+        setDynamicProducts(prods);
+      } catch (e) {
+        console.error('Error fetching dynamic products:', e);
+      }
+    };
+    loadProducts();
+  }, [currentPath]);
 
   // Sync route path changes via popstate
   useEffect(() => {
@@ -52,10 +90,16 @@ export default function App() {
     BLOG_POSTS.find((b) => `/blog/${b.slug}` === currentPath) ||
     (currentPath.startsWith('/blog/') ? BLOG_POSTS[0] : null);
 
-  // Google Analytics 4: Track page_view on initial load and client-side route changes
+  // Google Analytics 4 tracking & document title
   useEffect(() => {
     let title = 'PETSHOP - Premium Natural Pet Food for Dogs & Cats';
-    if (currentPath === '/privacy-policy') {
+    if (currentPath === '/admin/login') {
+      title = 'Admin Login | PETSHOP';
+    } else if (currentPath.startsWith('/admin')) {
+      title = 'Admin Console | PETSHOP CMS';
+    } else if (currentPath.startsWith('/product/')) {
+      title = 'Product Formula Details | PETSHOP';
+    } else if (currentPath === '/privacy-policy') {
       title = 'Privacy Policy | PETSHOP';
     } else if (currentPath === '/terms-and-conditions') {
       title = 'Terms & Conditions | PETSHOP';
@@ -128,9 +172,92 @@ export default function App() {
     }
   };
 
+  // ==================== 1. ADMIN LOGIN VIEW ====================
+  if (currentPath === '/admin/login') {
+    if (!authLoading && isAdmin) {
+      // If already signed in as administrator, automatically redirect to dashboard
+      handleNavigate('/admin/dashboard');
+      return null;
+    }
+    return <AdminLoginPage onNavigate={handleNavigate} />;
+  }
+
+  // ==================== 2. PROTECTED ADMIN DASHBOARD ROUTES ====================
+  if (currentPath.startsWith('/admin')) {
+    if (authLoading) {
+      return (
+        <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center">
+          <div className="w-10 h-10 border-4 border-[#EE1630] border-t-transparent rounded-full animate-spin mb-3" />
+          <p className="text-xs font-bold text-[#061B3A]">Validating administrator credentials...</p>
+        </div>
+      );
+    }
+
+    // Unauthenticated protection: redirect to /admin/login
+    if (!isAdmin) {
+      return <AdminLoginPage onNavigate={handleNavigate} />;
+    }
+
+    // Authenticated admin routing
+    let adminContent = <DashboardHome onNavigate={handleNavigate} />;
+
+    if (currentPath === '/admin/products') {
+      adminContent = <ProductManagement onNavigate={handleNavigate} />;
+    } else if (currentPath === '/admin/products/new') {
+      adminContent = <ProductFormPage onNavigate={handleNavigate} />;
+    } else if (currentPath.startsWith('/admin/products/edit/')) {
+      const editId = currentPath.replace('/admin/products/edit/', '');
+      adminContent = <ProductFormPage productId={editId} onNavigate={handleNavigate} />;
+    } else if (currentPath === '/admin/categories') {
+      adminContent = <CategoryManagement onNavigate={handleNavigate} />;
+    } else if (currentPath === '/admin/orders') {
+      adminContent = <OrdersManagement />;
+    } else if (currentPath === '/admin/customers') {
+      adminContent = <CustomersManagement />;
+    } else if (currentPath === '/admin/testimonials') {
+      adminContent = <TestimonialManagement />;
+    } else if (currentPath === '/admin/blog') {
+      adminContent = <BlogManagement />;
+    } else if (currentPath === '/admin/content') {
+      adminContent = <WebsiteContentManagement />;
+    } else if (currentPath === '/admin/settings') {
+      adminContent = <AdminSettings onNavigate={handleNavigate} />;
+    }
+
+    return (
+      <AdminLayout currentPath={currentPath} onNavigate={handleNavigate}>
+        {adminContent}
+      </AdminLayout>
+    );
+  }
+
+  // ==================== 3. DYNAMIC PRODUCT DETAILS PAGE (/product/:id) ====================
+  if (currentPath.startsWith('/product/')) {
+    const prodId = currentPath.replace('/product/', '');
+    return (
+      <div className="min-h-screen bg-[#FFFDF8] text-[#2B2B2B] font-sans antialiased">
+        <Header
+          activeSection={activeSection}
+          currentPath={currentPath}
+          onOpenSearch={() => setSearchOpen(true)}
+          onNavigate={handleNavigate}
+        />
+        <ProductDetailsPage
+          productId={prodId}
+          onBackToHome={(sec) => handleNavigate('/', sec)}
+          onNavigate={handleNavigate}
+        />
+        <Footer onNavigate={handleNavigate} />
+        <WhatsAppButton />
+        <ScrollToTop />
+      </div>
+    );
+  }
+
+  // ==================== 4. PUBLIC STOREFRONT WEBSITE ====================
   return (
     <div className="min-h-screen bg-[#FFFDF8] text-[#2B2B2B] font-sans selection:bg-[#F4C430] selection:text-[#2B2B2B] antialiased">
-      {/* HEADER WITH TOP CONTACT BAR */}
+      {/* HEADER WITH TOP CONTACT BAR & DISCREET ADMIN LOGIN */}
       <Header
         activeSection={activeSection}
         currentPath={currentPath}
@@ -181,8 +308,9 @@ export default function App() {
           {/* SECTION 2: ABOUT PETSHOP */}
           <AboutSection />
 
-          {/* PRODUCT COLLECTION (Dog & Cat Showcase) */}
+          {/* PRODUCT COLLECTION (Dog & Cat Showcase - Dynamic from Firestore) */}
           <ProductCollection
+            productsList={dynamicProducts}
             onSelectProduct={(product) => setSelectedProduct(product)}
           />
 
@@ -225,10 +353,11 @@ export default function App() {
       {/* FOOTER */}
       <Footer onNavigate={handleNavigate} />
 
-      {/* SEARCH OVERLAY */}
+      {/* SEARCH OVERLAY (Connected to Firestore Products) */}
       <SearchModal
         isOpen={searchOpen}
         onClose={() => setSearchOpen(false)}
+        productsList={dynamicProducts}
         onSelectProduct={(product) => setSelectedProduct(product)}
       />
 
@@ -250,5 +379,13 @@ export default function App() {
       {/* SCROLL TO TOP FLOATING BUTTON */}
       <ScrollToTop />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }

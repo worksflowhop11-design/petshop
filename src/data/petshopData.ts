@@ -28,6 +28,14 @@ import wetFoodCansImg from '../assets/images/petshop_wet_food_cans_pkg_178783940
 import productsBannerPetsImg from '../assets/images/petshop_products_banner_pets_1787841459189.jpg';
 import heroPetsWideMasterpieceImg from '../assets/images/petshop_hero_wide_masterpiece_1790747638405.jpg';
 
+// Clean white-background front-facing packaging assets (Drools-style consistent lineup)
+import dogPouchFrontImg from '../assets/images/petshop_dog_pouch_front_white_1790777691120.jpg';
+import catPouchFrontImg from '../assets/images/petshop_cat_pouch_front_white_1790777719866.jpg';
+import cansFrontImg from '../assets/images/petshop_cans_front_white_1790777738568.jpg';
+import puppyPouchFrontImg from '../assets/images/petshop_puppy_pouch_front_white_1790777758630.jpg';
+import kittenPouchFrontImg from '../assets/images/petshop_kitten_pouch_front_white_1790777778716.jpg';
+import lineupBannerImg from '../assets/images/petshop_product_lineup_drools_style_1790777667379.jpg';
+
 export const ASSETS = {
   heroBanner: heroPetsWideMasterpieceImg,
   heroPetsShowcase: heroPetsWideMasterpieceImg,
@@ -35,9 +43,15 @@ export const ASSETS = {
   catFood: catFoodImg,
   aboutPackages: aboutPackagesImg,
   fullCollection: fullCollectionImg,
-  dogFood3kg: dogFood3kgImg,
-  catFood3kg: catFood3kgImg,
-  wetFoodCans: wetFoodCansImg,
+  dogFood3kg: dogPouchFrontImg,
+  catFood3kg: catPouchFrontImg,
+  wetFoodCans: cansFrontImg,
+  dogPouchFront: dogPouchFrontImg,
+  catPouchFront: catPouchFrontImg,
+  cansFront: cansFrontImg,
+  puppyPouchFront: puppyPouchFrontImg,
+  kittenPouchFront: kittenPouchFrontImg,
+  lineupBanner: lineupBannerImg,
   productsBannerPets: productsBannerPetsImg,
 };
 
@@ -65,7 +79,7 @@ export const PRODUCTS: ProductItem[] = [
       'Shiny Coat & Daily Vitality',
       'Veterinarian Approved Quality Seal'
     ],
-    packageImage: dogFood3kgImg,
+    packageImage: dogPouchFrontImg,
     petImage: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=600&q=80', // Golden Retriever
     bagColor: 'red',
     guaranteedAnalysis: [
@@ -106,7 +120,7 @@ export const PRODUCTS: ProductItem[] = [
       'Healthy Digestion & Shiny Coat',
       'Balanced Urinary Tract Support'
     ],
-    packageImage: catFood3kgImg,
+    packageImage: catPouchFrontImg,
     petImage: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80', // Tabby Cat
     bagColor: 'gold',
     guaranteedAnalysis: [
@@ -145,7 +159,7 @@ export const PRODUCTS: ProductItem[] = [
       'Rich Savory Broth Gravy',
       'Great for Picky Eaters'
     ],
-    packageImage: wetFoodCansImg,
+    packageImage: cansFrontImg,
     petImage: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80',
     bagColor: 'red',
     guaranteedAnalysis: [

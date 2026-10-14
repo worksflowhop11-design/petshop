@@ -32,7 +32,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) 
               src={product.packageImage}
               alt={product.name}
               referrerPolicy="no-referrer"
-              className="w-full h-full object-cover rounded-xl"
+              className="w-full h-full object-contain rounded-xl"
             />
             <span className="absolute top-4 left-4 bg-[#D62828] text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full shadow-sm">
               PETSHOP

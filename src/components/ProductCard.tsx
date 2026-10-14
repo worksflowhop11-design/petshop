@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Eye, Info, Crown, Flame, Award } from 'lucide-react';
+import { Eye, Info } from 'lucide-react';
 import { ProductItem } from '../types';
 
 interface ProductCardProps {
@@ -8,35 +8,9 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProduct }) => {
-  // Determine dynamic badge styles based on product type
+  // Determine dynamic button styles based on product type
   const isDog = product.petType === 'dog';
   const isWetFood = product.category === 'wet-food';
-  
-  // Custom discount / benefit badge texts
-  let badgeLabel = 'BEST SELLER';
-  let badgeIcon = <Crown className="w-3.5 h-3.5 fill-current text-[#F4C430]" />;
-  let discountBadge = '32% OFF';
-
-  if (product.id.includes('cat-premium')) {
-    discountBadge = '36% OFF';
-    badgeLabel = 'BEST SELLER';
-  } else if (product.id.includes('chicken-chunks')) {
-    discountBadge = '11% OFF';
-    badgeLabel = 'SLOW COOKED';
-    badgeIcon = <Flame className="w-3.5 h-3.5 text-white" />;
-  } else if (product.id.includes('tuna-chunks')) {
-    discountBadge = '12% OFF';
-    badgeLabel = 'WILD TUNA';
-    badgeIcon = <Flame className="w-3.5 h-3.5 text-white" />;
-  } else if (product.id.includes('puppy') || product.id.includes('kitten')) {
-    discountBadge = 'NEW RECIPE';
-    badgeLabel = 'GROWTH & DHA';
-    badgeIcon = <Sparkles className="w-3.5 h-3.5 text-[#F4C430]" />;
-  } else if (product.id.includes('senior')) {
-    discountBadge = 'JOINT CARE';
-    badgeLabel = 'MOBILITY+';
-    badgeIcon = <Award className="w-3.5 h-3.5 text-[#F4C430]" />;
-  }
 
   const primaryBtnColor = isDog || isWetFood
     ? 'bg-[#D62828] hover:bg-[#B51F1F] text-white shadow-[#D62828]/20'
@@ -46,29 +20,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelectProdu
     <div className="group bg-white rounded-3xl border border-[#FFE8A3]/80 shadow-md hover:shadow-2xl hover:border-[#F4C430] transition-all duration-300 flex flex-col justify-between overflow-hidden relative">
       <div>
         
-        {/* TOP IMAGE & BADGES CONTAINER */}
+        {/* TOP IMAGE CONTAINER */}
         <div className="relative bg-gradient-to-b from-[#FFFDF8] via-[#FFFDF8] to-white p-4 pt-5 text-center flex flex-col items-center">
-          
-          {/* TOP LEFT BADGE */}
-          <div className="absolute top-3.5 left-3.5 z-20">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D62828] text-white text-[11px] font-black uppercase tracking-wider shadow-sm">
-              {badgeIcon}
-              <span>{badgeLabel}</span>
-            </span>
-          </div>
-
-          {/* TOP RIGHT DISCOUNT / NUTRITION TAG */}
-          <div className="absolute top-3.5 right-3.5 z-20">
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#F4C430] text-[#2B2B2B] text-[11px] font-black shadow-sm">
-              <Sparkles className="w-3 h-3 text-[#D62828]" />
-              <span>{discountBadge}</span>
-            </span>
-          </div>
 
           {/* MAIN PRODUCT PACKAGING IMAGE */}
           <div
             onClick={() => onSelectProduct(product)}
-            className="w-full h-56 sm:h-60 relative flex items-center justify-center cursor-pointer mt-5 group/img"
+            className="w-full h-56 sm:h-60 relative flex items-center justify-center cursor-pointer group/img"
           >
             <img
               src={product.packageImage}
