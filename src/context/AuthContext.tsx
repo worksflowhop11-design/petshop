@@ -34,9 +34,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState<boolean>(true);
   const [hasAdminsRegistered, setHasAdminsRegistered] = useState<boolean>(true);
 
-  // Check if any admin exists in the system
+  // Check if system setup is complete or any admin exists
   const checkAdminCount = async () => {
     try {
+      const setupSnap = await getDoc(doc(db, 'system', 'setup'));
+      if (setupSnap.exists()) {
+        setHasAdminsRegistered(true);
+        return;
+      }
       const q = query(collection(db, 'admins'), limit(1));
       const snap = await getDocs(q);
       setHasAdminsRegistered(!snap.empty);
@@ -61,26 +66,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setAdminData(data);
             setIsAdmin(true);
           } else {
-            // Check if there are no admins at all; if so, make this user admin
-            const q = query(collection(db, 'admins'), limit(1));
-            const existingAdmins = await getDocs(q);
-            if (existingAdmins.empty) {
-              const newAdminData: AdminUser = {
-                uid: user.uid,
-                email: user.email || '',
-                displayName: user.displayName || 'Administrator',
-                role: 'superadmin',
-                createdAt: new Date().toISOString(),
-                lastLogin: new Date().toISOString(),
-              };
-              await setDoc(adminDocRef, newAdminData);
-              setAdminData(newAdminData);
-              setIsAdmin(true);
-              setHasAdminsRegistered(true);
-            } else {
-              setAdminData(null);
-              setIsAdmin(false);
-            }
+            setAdminData(null);
+            setIsAdmin(false);
           }
         } catch (err) {
           console.error('Error fetching admin profile:', err);
@@ -100,32 +87,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const cred = await signInWithEmailAndPassword(auth, email, pass);
     const adminDocRef = doc(db, 'admins', cred.user.uid);
     const adminSnap = await getDoc(adminDocRef);
+
     if (!adminSnap.exists()) {
-      // Check if this was first user
-      const q = query(collection(db, 'admins'), limit(1));
-      const existing = await getDocs(q);
-      if (existing.empty) {
-        const newAdmin: AdminUser = {
-          uid: cred.user.uid,
-          email: cred.user.email || email,
-          displayName: cred.user.displayName || 'Admin',
-          role: 'superadmin',
-          createdAt: new Date().toISOString(),
-        };
-        await setDoc(adminDocRef, newAdmin);
-        setAdminData(newAdmin);
-        setIsAdmin(true);
-        return;
-      }
       await signOut(auth);
       throw new Error('Access denied. This account does not possess administrator privileges.');
     }
+
     const data = adminSnap.data() as AdminUser;
-    setAdminData(data);
+    const updatedData: AdminUser = {
+      ...data,
+      lastLogin: new Date().toISOString(),
+    };
+    try {
+      await setDoc(adminDocRef, updatedData, { merge: true });
+    } catch {
+      // non-blocking if update fails
+    }
+    setAdminData(updatedData);
     setIsAdmin(true);
   };
 
   const setupFirstAdmin = async (email: string, pass: string, name: string = 'Administrator') => {
+    // 1. Register with Firebase Authentication
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
     const newAdmin: AdminUser = {
       uid: cred.user.uid,
@@ -135,7 +118,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       createdAt: new Date().toISOString(),
       lastLogin: new Date().toISOString(),
     };
+
+    // 2. Write admin record to Firestore
     await setDoc(doc(db, 'admins', cred.user.uid), newAdmin);
+
+    // 3. Engage System Setup Lock to permanently prevent subsequent public registrations
+    try {
+      await setDoc(doc(db, 'system', 'setup'), {
+        isSetupComplete: true,
+        setupAt: new Date().toISOString(),
+        adminUid: cred.user.uid,
+        adminEmail: cred.user.email || email,
+      });
+    } catch (e) {
+      console.warn('System setup lock creation note:', e);
+    }
+
     setAdminData(newAdmin);
     setIsAdmin(true);
     setHasAdminsRegistered(true);

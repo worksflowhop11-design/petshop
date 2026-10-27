@@ -4,16 +4,18 @@ import { BLOG_POSTS } from '../data/blogData';
 import { BlogPost } from '../types';
 
 interface BlogSectionProps {
+  blogs?: BlogPost[];
   onSelectBlog: (blog: BlogPost) => void;
   onViewAllBlogs: () => void;
 }
 
 export const BlogSection: React.FC<BlogSectionProps> = ({
+  blogs: propBlogs,
   onSelectBlog,
   onViewAllBlogs,
 }) => {
-  // Present all 6 curated blog cards matching the user's recommended topics
-  const blogs = BLOG_POSTS.slice(0, 6);
+  // Present curated blog cards matching the user's recommended topics
+  const blogs = (propBlogs && propBlogs.length > 0 ? propBlogs : BLOG_POSTS).slice(0, 6);
 
   return (
     <section

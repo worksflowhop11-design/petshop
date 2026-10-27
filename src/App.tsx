@@ -29,8 +29,8 @@ import { trackPageView } from './utils/analytics';
 
 // Firebase & Auth imports
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { fetchProducts } from './services/firestoreService';
-import { FirestoreProduct } from './types/admin';
+import { fetchProducts, fetchBlogs, fetchWebsiteContent, mapAdminBlogToBlogPost } from './services/firestoreService';
+import { FirestoreProduct, WebsiteContentSettings } from './types/admin';
 
 // Admin CMS Components
 import { AdminLoginPage } from './components/admin/AdminLoginPage';
@@ -59,20 +59,35 @@ function AppContent() {
   const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
   const [selectedBlog, setSelectedBlog] = useState<BlogPost | null>(null);
 
-  // Dynamic Firestore products state
+  // Dynamic Firestore state
   const [dynamicProducts, setDynamicProducts] = useState<FirestoreProduct[]>([]);
+  const [dynamicBlogs, setDynamicBlogs] = useState<BlogPost[]>([]);
+  const [websiteContent, setWebsiteContent] = useState<WebsiteContentSettings | undefined>(undefined);
 
-  // Load Firestore products on initial mount
+  // Load Firestore products, blogs, and editable website content
   useEffect(() => {
-    const loadProducts = async () => {
+    const loadDynamicData = async () => {
       try {
-        const prods = await fetchProducts();
+        const [prods, blogsData, content] = await Promise.all([
+          fetchProducts(),
+          fetchBlogs(),
+          fetchWebsiteContent(),
+        ]);
         setDynamicProducts(prods);
+        if (blogsData && blogsData.length > 0) {
+          const published = blogsData
+            .filter((b) => b.isPublished !== false)
+            .map(mapAdminBlogToBlogPost);
+          setDynamicBlogs(published);
+        }
+        if (content) {
+          setWebsiteContent(content);
+        }
       } catch (e) {
-        console.error('Error fetching dynamic products:', e);
+        console.error('Error fetching dynamic Firestore data:', e);
       }
     };
-    loadProducts();
+    loadDynamicData();
   }, [currentPath]);
 
   // Sync route path changes via popstate
@@ -85,10 +100,11 @@ function AppContent() {
   }, []);
 
   // Resolve current blog post from selected state or current URL pathname
+  const allAvailableBlogs = dynamicBlogs.length > 0 ? dynamicBlogs : BLOG_POSTS;
   const activeBlogPost =
     selectedBlog ||
-    BLOG_POSTS.find((b) => `/blog/${b.slug}` === currentPath) ||
-    (currentPath.startsWith('/blog/') ? BLOG_POSTS[0] : null);
+    allAvailableBlogs.find((b) => `/blog/${b.slug}` === currentPath) ||
+    (currentPath.startsWith('/blog/') ? allAvailableBlogs[0] : null);
 
   // Google Analytics 4 tracking & document title
   useEffect(() => {
@@ -278,6 +294,7 @@ function AppContent() {
         />
       ) : currentPath === '/blogs' ? (
         <BlogListingPage
+          blogs={dynamicBlogs}
           onBackToHome={(sec) => handleNavigate('/', sec)}
           onSelectBlog={(blog) => {
             setSelectedBlog(blog);
@@ -297,7 +314,7 @@ function AppContent() {
       ) : (
         <>
           {/* HERO SECTION */}
-          <HeroSection />
+          <HeroSection content={websiteContent} />
 
           {/* OUR PRODUCTS SHOWCASE */}
           <OurProductsShowcase onSelectProduct={(product) => setSelectedProduct(product)} />
@@ -306,7 +323,7 @@ function AppContent() {
           <TrustSection />
 
           {/* SECTION 2: ABOUT PETSHOP */}
-          <AboutSection />
+          <AboutSection content={websiteContent} />
 
           {/* PRODUCT COLLECTION (Dog & Cat Showcase - Dynamic from Firestore) */}
           <ProductCollection
@@ -332,6 +349,7 @@ function AppContent() {
 
           {/* PET CARE BLOG SECTION */}
           <BlogSection
+            blogs={dynamicBlogs}
             onSelectBlog={(blog) => {
               setSelectedBlog(blog);
               handleNavigate(`/blog/${blog.slug}`);

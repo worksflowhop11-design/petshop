@@ -2,7 +2,23 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
-import firebaseConfig from '../../firebase-applet-config.json';
+import rawAppletConfig from '../../firebase-applet-config.json';
+
+// Flexible Firebase configuration: prioritize Vercel/Vite environment variables, fall back to bundled applet config
+export const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || rawAppletConfig.apiKey,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || rawAppletConfig.authDomain,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || rawAppletConfig.projectId,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || rawAppletConfig.storageBucket,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || rawAppletConfig.messagingSenderId,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || rawAppletConfig.appId,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || rawAppletConfig.measurementId || '',
+};
+
+const firestoreDbId =
+  import.meta.env.VITE_FIREBASE_DATABASE_ID ||
+  rawAppletConfig.firestoreDatabaseId ||
+  undefined;
 
 // Initialize Firebase App instance
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
@@ -10,10 +26,8 @@ const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 // Auth instance
 export const auth = getAuth(app);
 
-// Firestore instance targeting provisioned database ID
-export const db = firebaseConfig.firestoreDatabaseId
-  ? getFirestore(app, firebaseConfig.firestoreDatabaseId)
-  : getFirestore(app);
+// Firestore instance targeting provisioned or default database ID
+export const db = firestoreDbId ? getFirestore(app, firestoreDbId) : getFirestore(app);
 
 // Storage instance
 export const storage = getStorage(app);

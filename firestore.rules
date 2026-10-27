@@ -2,12 +2,12 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Helper function to check if user is signed in
+    // Global Helper: Check if caller is signed in
     function isSignedIn() {
       return request.auth != null;
     }
 
-    // Helper function to check if user is an administrator
+    // Global Helper: Check if caller is an authorized administrator
     function isAdmin() {
       return isSignedIn() && (
         exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
@@ -15,57 +15,75 @@ service cloud.firestore {
       );
     }
 
-    // Admins Collection
-    // An admin can read admin list. First-time admin setup allows creation of own record.
-    match /admins/{adminId} {
-      allow read: if isSignedIn() && (request.auth.uid == adminId || isAdmin());
-      allow write: if isSignedIn() && (request.auth.uid == adminId || isAdmin());
+    // System Setup Lock Collection:
+    // Tracks if initial master-admin registration is complete.
+    // Public can read to determine if setup mode is active.
+    // Only created once by the first signed-in user during initialization.
+    // Once created, can only be modified or deleted by an existing admin.
+    match /system/{docId} {
+      allow read: if true;
+      allow create: if isSignedIn() && !exists(/databases/$(database)/documents/system/setup);
+      allow update, delete: if isAdmin();
     }
 
-    // Products Collection
-    // Public can read all active products; Only verified admins can create, update, or delete.
+    // Admins Collection:
+    // Only signed-in users can read their own admin record or other admins if already an admin.
+    // First admin record can be created ONLY if the system setup lock hasn't been engaged.
+    // Subsequent admin creation, modification, or removal is restricted strictly to verified admins.
+    match /admins/{adminId} {
+      allow read: if isSignedIn() && (request.auth.uid == adminId || isAdmin());
+      allow create: if isSignedIn() && (
+        (request.auth.uid == adminId && !exists(/databases/$(database)/documents/system/setup)) ||
+        isAdmin()
+      );
+      allow update, delete: if isAdmin();
+    }
+
+    // Products Collection:
+    // Public can read all products; Only verified admins can create, update, or delete.
     match /products/{productId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    // Categories Collection
-    // Public can read categories; Only verified admins can manage categories.
+    // Categories Collection:
+    // Public can read product categories; Only verified admins can manage categories.
     match /categories/{categoryId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    // Blogs Collection
-    // Public can read published blog articles; Only verified admins can manage blogs.
+    // Blogs Collection:
+    // Public can read published blog articles; Only verified admins can create, edit, or delete articles.
     match /blogs/{blogId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    // Testimonials Collection
-    // Public can read testimonials; Only verified admins can manage testimonials.
+    // Testimonials Collection:
+    // Public can read verified customer testimonials; Only verified admins can modify or delete them.
     match /testimonials/{testimonialId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    // Website Content Collection (Settings, banners, text)
-    // Public can read content configuration; Only verified admins can update content.
+    // Website Content Collection (Banners, headings, about, contact info):
+    // Public can read brand content; Only verified admins can save edits.
     match /websiteContent/{contentId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    // Orders Collection
-    // Customers and admins can read/write orders appropriately.
+    // Orders Collection:
+    // Verified admins can view, update, and manage orders.
+    // Public visitors can submit checkout/order inquiries if enabled.
     match /orders/{orderId} {
       allow read, write: if isAdmin();
-      allow create: if true; // Public checkout creates an order
+      allow create: if true;
     }
 
-    // Customers Collection
-    // Protected customer data accessible by admins.
+    // Customers Collection:
+    // Protected customer data accessible only by administrators.
     match /customers/{customerId} {
       allow read, write: if isAdmin();
     }

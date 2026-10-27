@@ -1,8 +1,13 @@
 import React from 'react';
 import { PawPrint, Sparkles, ShieldCheck } from 'lucide-react';
 import { ASSETS } from '../data/petshopData';
+import { WebsiteContentSettings } from '../types/admin';
 
-export const HeroSection: React.FC = () => {
+interface HeroSectionProps {
+  content?: WebsiteContentSettings;
+}
+
+export const HeroSection: React.FC<HeroSectionProps> = ({ content }) => {
   const handleScrollTo = (id: string) => {
     const cleanId = id.startsWith('#') ? id.slice(1) : id;
     const el = document.getElementById(cleanId) || document.querySelector(id);
@@ -76,7 +81,7 @@ export const HeroSection: React.FC = () => {
           <div>
             <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[#EE1630] text-white text-xs sm:text-sm font-black uppercase tracking-wider shadow-sm">
               <PawPrint className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FFC21C] fill-[#FFC21C] shrink-0" />
-              <span>PREMIUM PET FOOD</span>
+              <span>{content?.heroBadge || 'PREMIUM PET FOOD'}</span>
             </div>
           </div>
 
@@ -85,19 +90,19 @@ export const HeroSection: React.FC = () => {
             className="font-black tracking-tight leading-[1.07] text-[#061B3A]"
             style={{ fontSize: 'clamp(2.2rem, 3.6vw, 4.25rem)' }}
           >
-            <span className="block text-[#061B3A]">Premium Nutrition</span>
+            <span className="block text-[#061B3A]">{content?.heroHeadingLine1 || 'Premium Nutrition'}</span>
             <span className="block mt-1 sm:mt-1.5">
               <span className="text-[#061B3A]">For </span>
               <span className="text-[#FFC21C]">Happy </span>
               <span className="text-[#EE1630]">Dogs </span>
               <span className="text-[#061B3A]">&amp;</span>
             </span>
-            <span className="text-[#FFC21C] block mt-1 sm:mt-1.5">Cats</span>
+            <span className="text-[#FFC21C] block mt-1 sm:mt-1.5">{content?.heroHeadingLine2 ? content.heroHeadingLine2.replace(/.*(?:&|and)\s*/i, '') : 'Cats'}</span>
           </h1>
 
           {/* DESCRIPTION PARAGRAPH */}
           <p className="text-base sm:text-lg xl:text-xl text-[#061B3A]/80 font-normal leading-relaxed max-w-[540px] pt-1">
-            Give your furry friends the healthiest and most delicious meals made with real meat, natural ingredients, balanced nutrition, and veterinarian-formulated recipes.
+            {content?.heroDescription || 'Give your furry friends the healthiest and most delicious meals made with real meat, natural ingredients, balanced nutrition, and veterinarian-formulated recipes.'}
           </p>
 
           {/* TWO LARGE ROUNDED CTA BUTTONS */}

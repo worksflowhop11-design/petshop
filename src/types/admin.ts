@@ -77,6 +77,7 @@ export interface AdminBlogItem {
   publishDate: string;
   readTime?: string;
   isPublished: boolean;
+  isFeatured?: boolean;
   tags?: string[];
   createdAt?: string;
 }

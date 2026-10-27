@@ -238,22 +238,30 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onNavigate }) =>
             </button>
           </form>
 
-          {/* Toggle between first time setup and regular login */}
-          <div className="pt-3 border-t border-gray-100 text-center">
-            <button
-              type="button"
-              onClick={() => {
-                setIsFirstTimeSetup(!isFirstTimeSetup);
-                setErrorMsg(null);
-                setSuccessMsg(null);
-              }}
-              className="text-xs font-semibold text-gray-500 hover:text-[#061B3A] transition-colors cursor-pointer"
-            >
-              {isFirstTimeSetup
-                ? 'Already have an admin account? Sign In'
-                : 'Need to configure a new administrator? Setup First Admin'}
-            </button>
-          </div>
+          {/* Toggle only if initial setup has not been completed */}
+          {!hasAdminsRegistered ? (
+            <div className="pt-3 border-t border-gray-100 text-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsFirstTimeSetup(!isFirstTimeSetup);
+                  setErrorMsg(null);
+                  setSuccessMsg(null);
+                }}
+                className="text-xs font-semibold text-gray-500 hover:text-[#061B3A] transition-colors cursor-pointer"
+              >
+                {isFirstTimeSetup
+                  ? 'Already have an admin account? Sign In'
+                  : 'First time setup? Create Master Admin'}
+              </button>
+            </div>
+          ) : (
+            <div className="pt-3 border-t border-gray-100 text-center">
+              <span className="text-[11px] font-medium text-slate-400">
+                Authorized Personnel Access Only • Master Registration Closed
+              </span>
+            </div>
+          )}
 
         </div>
 

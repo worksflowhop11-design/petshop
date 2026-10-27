@@ -16,21 +16,24 @@ import { BLOG_POSTS, BLOG_CATEGORIES } from '../data/blogData';
 import { BlogPost, BlogCategory } from '../types';
 
 interface BlogListingPageProps {
+  blogs?: BlogPost[];
   onBackToHome: (sectionId?: string) => void;
   onSelectBlog: (blog: BlogPost) => void;
 }
 
 export const BlogListingPage: React.FC<BlogListingPageProps> = ({
+  blogs: propBlogs,
   onBackToHome,
   onSelectBlog,
 }) => {
+  const sourceBlogs = propBlogs && propBlogs.length > 0 ? propBlogs : BLOG_POSTS;
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [visibleCount, setVisibleCount] = useState(6);
 
   // Filter blog posts by search query and selected category
   const filteredBlogs = useMemo(() => {
-    return BLOG_POSTS.filter((post) => {
+    return sourceBlogs.filter((post) => {
       const matchesCategory =
         selectedCategory === 'All' || post.category === selectedCategory;
 

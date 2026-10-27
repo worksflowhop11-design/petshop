@@ -1,8 +1,13 @@
 import React from 'react';
 import { CheckCircle2, ArrowRight, ShieldCheck, Heart, Sparkles } from 'lucide-react';
 import { ASSETS } from '../data/petshopData';
+import { WebsiteContentSettings } from '../types/admin';
 
-export const AboutSection: React.FC = () => {
+interface AboutSectionProps {
+  content?: WebsiteContentSettings;
+}
+
+export const AboutSection: React.FC<AboutSectionProps> = ({ content }) => {
   const features = [
     'Premium Quality Ingredients',
     'Complete & Balanced Nutrition',
@@ -39,13 +44,18 @@ export const AboutSection: React.FC = () => {
 
             {/* LARGE HEADING */}
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#2B2B2B] leading-tight tracking-tight font-sans">
-              Providing Healthy Nutrition <br className="hidden sm:inline" />
-              <span className="text-[#1E4DB7]">for Every Pet</span>
+              {content?.aboutTitle || (
+                <>
+                  Providing Healthy Nutrition <br className="hidden sm:inline" />
+                  <span className="text-[#1E4DB7]">for Every Pet</span>
+                </>
+              )}
             </h2>
 
             {/* DESCRIPTION */}
             <p className="text-base sm:text-lg text-[#2B2B2B]/80 leading-relaxed font-medium">
-              PETSHOP is committed to providing premium-quality nutrition for both dogs and cats. Every product is carefully selected using high-quality ingredients to support healthy growth, stronger immunity, improved digestion, shiny coats, and overall wellness. Our mission is to provide healthy, nutritious, and affordable pet food that every pet parent can trust. We believe every pet deserves balanced nutrition made with care, quality, and love.
+              {content?.aboutParagraph1 ||
+                'PETSHOP is committed to providing premium-quality nutrition for both dogs and cats. Every product is carefully selected using high-quality ingredients to support healthy growth, stronger immunity, improved digestion, shiny coats, and overall wellness. Our mission is to provide healthy, nutritious, and affordable pet food that every pet parent can trust. We believe every pet deserves balanced nutrition made with care, quality, and love.'}
             </p>
 
             {/* FEATURE LIST WITH MODERN ICONS */}

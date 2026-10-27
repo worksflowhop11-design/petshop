@@ -24,7 +24,7 @@ import {
 } from '../types/admin';
 import { PRODUCTS, TESTIMONIALS } from '../data/petshopData';
 import { BLOG_POSTS } from '../data/blogData';
-import { ProductItem } from '../types';
+import { ProductItem, BlogPost } from '../types';
 
 // ==================== DEFAULT CATEGORIES SEED ====================
 export const DEFAULT_CATEGORIES: ProductCategoryData[] = [
@@ -285,6 +285,48 @@ export async function fetchBlogs(): Promise<AdminBlogItem[]> {
       tags: [b.category, 'Nutrition', 'Pet Care'],
     }));
   }
+}
+
+export function mapAdminBlogToBlogPost(b: AdminBlogItem): BlogPost {
+  let intro = b.excerpt || '';
+  let conclusion = '';
+  const sections: { heading: string; body: string }[] = [];
+
+  const raw = b.content || '';
+  const rawParts = raw.split(/###\s+/);
+  if (rawParts.length > 1) {
+    intro = rawParts[0].trim() || intro;
+    for (let i = 1; i < rawParts.length; i++) {
+      const lines = rawParts[i].split('\n');
+      const heading = lines[0].trim();
+      const body = lines.slice(1).join('\n').trim();
+      sections.push({ heading, body });
+    }
+  } else {
+    sections.push({ heading: 'Nutritional Overview', body: raw });
+  }
+
+  return {
+    id: b.id || b.slug,
+    slug: b.slug,
+    category: (b.category as any) || 'Pet Nutrition',
+    title: b.title,
+    description: b.excerpt,
+    image: b.imageUrl,
+    imageAlt: `${b.title} PETSHOP Article`,
+    publishDate: b.publishDate || 'Recent',
+    readTime: b.readTime || '4 min read',
+    author: {
+      name: b.author || 'PETSHOP Veterinary Team',
+      role: 'Pet Nutritionist',
+    },
+    featured: b.isFeatured,
+    content: {
+      intro: intro || b.excerpt,
+      sections: sections.length > 0 ? sections : [{ heading: 'Nutritional Care', body: b.excerpt }],
+      conclusion: conclusion || 'For tailored nutritional advice, consult your veterinarian or visit our feeding guides.',
+    },
+  };
 }
 
 export async function saveBlog(blog: AdminBlogItem): Promise<string> {
