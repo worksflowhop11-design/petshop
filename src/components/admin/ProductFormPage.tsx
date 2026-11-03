@@ -13,11 +13,13 @@ import {
 } from 'lucide-react';
 import {
   fetchProducts,
+  fetchProductById,
   fetchCategories,
   saveProduct,
   uploadImageFile,
 } from '../../services/firestoreService';
 import { FirestoreProduct, ProductCategoryData } from '../../types/admin';
+import { ASSETS } from '../../data/petshopData';
 
 interface ProductFormPageProps {
   productId?: string;
@@ -77,8 +79,7 @@ export const ProductFormPage: React.FC<ProductFormPageProps> = ({ productId, onN
       }
 
       if (productId) {
-        const allProds = await fetchProducts();
-        const found = allProds.find((p) => p.id === productId);
+        const found = await fetchProductById(productId);
         if (found) {
           setName(found.name || '');
           setProductCode(found.productCode || '');
@@ -512,16 +513,32 @@ export const ProductFormPage: React.FC<ProductFormPageProps> = ({ productId, onN
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Primary Image Upload & Preview */}
-            <div className="md:col-span-1 border-2 border-dashed border-slate-200 rounded-3xl p-4 text-center flex flex-col items-center justify-center relative hover:border-[#EE1630] transition-colors bg-slate-50/50">
-              {imagePreview ? (
-                <div className="relative w-full h-48 flex items-center justify-center">
-                  <img
-                    src={imagePreview}
-                    alt="Packaging preview"
-                    className="max-h-full max-w-full object-contain filter drop-shadow-md"
-                  />
-                  <label className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-bold rounded-2xl cursor-pointer">
-                    <span>Replace Image</span>
+            <div className="md:col-span-1 space-y-3">
+              <div className="border-2 border-dashed border-slate-200 rounded-3xl p-4 text-center flex flex-col items-center justify-center relative hover:border-[#EE1630] transition-colors bg-slate-50/50 min-h-[190px]">
+                {imagePreview ? (
+                  <div className="relative w-full h-44 flex items-center justify-center">
+                    <img
+                      src={imagePreview}
+                      alt="Packaging preview"
+                      className="max-h-full max-w-full object-contain filter drop-shadow-md"
+                    />
+                    <label className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-bold rounded-2xl cursor-pointer">
+                      <span>Replace Image</span>
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/jpg"
+                        onChange={handleMainImageChange}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                ) : (
+                  <label className="cursor-pointer flex flex-col items-center justify-center py-6 w-full">
+                    <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-2">
+                      <Upload className="w-6 h-6" />
+                    </div>
+                    <span className="text-xs font-bold text-[#061B3A]">Upload Packaging Image</span>
+                    <span className="text-[10px] text-slate-400 mt-1">JPG, PNG, or WEBP</span>
                     <input
                       type="file"
                       accept="image/jpeg,image/png,image/webp,image/jpg"
@@ -529,22 +546,42 @@ export const ProductFormPage: React.FC<ProductFormPageProps> = ({ productId, onN
                       className="hidden"
                     />
                   </label>
+                )}
+              </div>
+
+              {/* Brand Presets Quick-Select */}
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+                  Or select brand packaging design:
+                </span>
+                <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                  {[
+                    { label: 'Dog Dry', img: ASSETS.dogPouchFront },
+                    { label: 'Cat Dry', img: ASSETS.catPouchFront },
+                    { label: 'Wet Can', img: ASSETS.wetFoodCans },
+                    { label: 'Puppy', img: ASSETS.puppyPouchFront },
+                    { label: 'Kitten', img: ASSETS.kittenPouchFront },
+                  ].map((preset) => (
+                    <button
+                      key={preset.label}
+                      type="button"
+                      onClick={() => {
+                        setPackageImage(preset.img);
+                        setImagePreview(preset.img);
+                        setImageFile(null);
+                      }}
+                      className={`px-2.5 py-1.5 rounded-xl border text-[10px] font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+                        imagePreview === preset.img
+                          ? 'border-[#EE1630] bg-red-50 text-[#EE1630]'
+                          : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
+                      }`}
+                    >
+                      <img src={preset.img} alt={preset.label} className="w-4 h-4 object-contain" />
+                      <span>{preset.label}</span>
+                    </button>
+                  ))}
                 </div>
-              ) : (
-                <label className="cursor-pointer flex flex-col items-center justify-center py-6 w-full">
-                  <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-2">
-                    <Upload className="w-6 h-6" />
-                  </div>
-                  <span className="text-xs font-bold text-[#061B3A]">Upload Primary Pack</span>
-                  <span className="text-[10px] text-slate-400 mt-1">JPG, PNG, or WEBP</span>
-                  <input
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp,image/jpg"
-                    onChange={handleMainImageChange}
-                    className="hidden"
-                  />
-                </label>
-              )}
+              </div>
             </div>
 
             {/* Additional Images Upload */}

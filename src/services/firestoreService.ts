@@ -60,6 +60,17 @@ export async function uploadImageFile(file: File, folder: string = 'products'): 
   }
 }
 
+// ==================== PRODUCT PAYLOAD SANITIZER ====================
+function sanitizeProductPayload(product: Partial<FirestoreProduct>): Record<string, any> {
+  const result: Record<string, any> = {};
+  for (const [key, value] of Object.entries(product)) {
+    if (value !== undefined && key !== 'id') {
+      result[key] = value;
+    }
+  }
+  return result;
+}
+
 // ==================== PRODUCT SERVICES ====================
 export const getDefaultProducts = (): FirestoreProduct[] => {
   return PRODUCTS.map((p, idx) => ({
@@ -75,14 +86,26 @@ export const getDefaultProducts = (): FirestoreProduct[] => {
   }));
 };
 
-export async function fetchProducts(): Promise<FirestoreProduct[]> {
+export async function fetchProducts(onlyPublished: boolean = false): Promise<FirestoreProduct[]> {
   try {
     const colRef = collection(db, 'products');
-    const snapshot = await getDocs(colRef);
+    let snapshot;
+    if (onlyPublished || !auth.currentUser) {
+      const q = query(colRef, where('isActive', '==', true));
+      snapshot = await getDocs(q);
+    } else {
+      try {
+        snapshot = await getDocs(colRef);
+      } catch (adminErr) {
+        // Fallback to active products query if admin check fails
+        const q = query(colRef, where('isActive', '==', true));
+        snapshot = await getDocs(q);
+      }
+    }
 
     if (snapshot.empty) {
       // Only authenticated admins can write seed data to Firestore
-      if (auth.currentUser) {
+      if (!onlyPublished && auth.currentUser) {
         try {
           await seedDefaultProducts();
           const newSnap = await getDocs(colRef);
@@ -93,14 +116,30 @@ export async function fetchProducts(): Promise<FirestoreProduct[]> {
           // If seeding fails due to permissions, return static products smoothly
         }
       }
-      return getDefaultProducts();
+      const defaults = getDefaultProducts();
+      return onlyPublished ? defaults.filter((p) => p.isActive !== false) : defaults;
     }
 
     return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreProduct));
   } catch (err) {
     console.warn('Failed to fetch from Firestore, falling back to static PRODUCTS:', err);
-    return getDefaultProducts();
+    const defaults = getDefaultProducts();
+    return onlyPublished ? defaults.filter((p) => p.isActive !== false) : defaults;
   }
+}
+
+export async function fetchProductById(productId: string): Promise<FirestoreProduct | null> {
+  try {
+    const docRef = doc(db, 'products', productId);
+    const snap = await getDoc(docRef);
+    if (snap.exists()) {
+      return { id: snap.id, ...snap.data() } as FirestoreProduct;
+    }
+  } catch (err) {
+    console.warn(`Error fetching product ${productId}:`, err);
+  }
+  const defaults = getDefaultProducts();
+  return defaults.find((p) => p.id === productId) || null;
 }
 
 export async function seedDefaultProducts(): Promise<void> {
@@ -144,7 +183,7 @@ export async function seedDefaultProducts(): Promise<void> {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
-      await setDoc(docRef, productData);
+      await setDoc(docRef, sanitizeProductPayload(productData));
     }
   } catch (e) {
     console.warn('Notice: Seeding default products requires administrator credentials:', e);
@@ -154,19 +193,21 @@ export async function seedDefaultProducts(): Promise<void> {
 export async function saveProduct(product: FirestoreProduct): Promise<string> {
   const colRef = collection(db, 'products');
   const now = new Date().toISOString();
+  const sanitized = sanitizeProductPayload(product);
 
   if (product.id) {
     const docRef = doc(db, 'products', product.id);
-    const { id, ...dataToSave } = product;
-    await setDoc(docRef, { ...dataToSave, updatedAt: now }, { merge: true });
+    await setDoc(docRef, { ...sanitized, updatedAt: now }, { merge: true });
     return product.id;
   } else {
-    const newDoc = await addDoc(colRef, {
-      ...product,
+    // Generate new document reference with unique ID
+    const newDocRef = doc(colRef);
+    await setDoc(newDocRef, {
+      ...sanitized,
       createdAt: now,
       updatedAt: now,
     });
-    return newDoc.id;
+    return newDocRef.id;
   }
 }
 

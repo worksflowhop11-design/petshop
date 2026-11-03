@@ -41,7 +41,7 @@ export const DashboardHome: React.FC<DashboardHomeProps> = ({ onNavigate }) => {
     setLoading(true);
     try {
       const [prods, cats, ords, custs] = await Promise.all([
-        fetchProducts(),
+        fetchProducts(false),
         fetchCategories(),
         fetchOrders(),
         fetchCustomers(),

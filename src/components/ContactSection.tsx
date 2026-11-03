@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Clock, Send, CheckCircle2, PawPrint } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, Send, CheckCircle2, PawPrint, Navigation, ExternalLink } from 'lucide-react';
+
+const SHOP_ADDRESS = '101 Hill Town Impress, Nikol, Ahmedabad – 382350, Gujarat, India';
+const GOOGLE_MAPS_SEARCH_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(SHOP_ADDRESS)}`;
+const GOOGLE_MAPS_DIRECTIONS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(SHOP_ADDRESS)}`;
 
 export const ContactSection: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -47,17 +51,42 @@ export const ContactSection: React.FC = () => {
 
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#D62828]/10 text-[#D62828] flex items-center justify-center shrink-0">
+                  <a
+                    href={GOOGLE_MAPS_SEARCH_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="View 101 Hill Town Impress on Google Maps"
+                    aria-label="View 101 Hill Town Impress on Google Maps"
+                    className="w-10 h-10 rounded-xl bg-[#D62828]/10 text-[#D62828] flex items-center justify-center shrink-0 cursor-pointer hover:bg-[#D62828] hover:text-white hover:scale-105 active:scale-95 transition-all duration-200 shadow-xs"
+                  >
                     <MapPin className="w-5 h-5" />
-                  </div>
+                  </a>
                   <div>
                     <p className="text-xs font-extrabold uppercase text-[#2B2B2B]/60 tracking-wider">Address</p>
-                    <p className="text-sm font-bold text-[#2B2B2B] leading-relaxed">
+                    <a
+                      href={GOOGLE_MAPS_SEARCH_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="View location on Google Maps"
+                      className="text-sm font-bold text-[#2B2B2B] hover:text-[#D62828] leading-relaxed transition-colors block cursor-pointer"
+                    >
                       101 Hill Town Impress<br />
                       Nikol<br />
                       Ahmedabad – 382350<br />
                       Gujarat, India
-                    </p>
+                    </a>
+                    <a
+                      href={GOOGLE_MAPS_DIRECTIONS_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Get directions to PETSHOP on Google Maps"
+                      aria-label="Get directions to PETSHOP on Google Maps"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#D62828] hover:text-[#b01e1e] hover:underline mt-2 transition-colors cursor-pointer"
+                    >
+                      <Navigation className="w-3.5 h-3.5" />
+                      <span>Get Directions</span>
+                      <ExternalLink className="w-3 h-3 opacity-70" />
+                    </a>
                   </div>
                 </div>
 
@@ -103,18 +132,34 @@ export const ContactSection: React.FC = () => {
               </div>
             </div>
 
-            {/* STYLIZED MAP GRAPHIC */}
-            <div className="relative rounded-3xl overflow-hidden border-2 border-[#FFE8A3] bg-[#FFE8A3]/30 h-52 shadow-md flex items-center justify-center">
-              <div className="absolute inset-0 opacity-40 bg-[radial-gradient(#D62828_1px,transparent_1px)] [background-size:16px_16px]" />
+            {/* STYLIZED MAP GRAPHIC / CLICKABLE LOCATION CARD */}
+            <a
+              href={GOOGLE_MAPS_SEARCH_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Open PETSHOP on Google Maps (101 Hill Town Impress, Nikol, Ahmedabad)"
+              aria-label="Open PETSHOP Nutrition Center location on Google Maps"
+              className="group relative rounded-3xl overflow-hidden border-2 border-[#FFE8A3] bg-[#FFE8A3]/30 hover:bg-[#FFE8A3]/50 h-52 shadow-md hover:shadow-xl hover:border-[#D62828]/40 transition-all duration-300 flex items-center justify-center cursor-pointer block transform hover:-translate-y-1"
+            >
+              <div className="absolute inset-0 opacity-40 bg-[radial-gradient(#D62828_1px,transparent_1px)] [background-size:16px_16px] group-hover:opacity-60 transition-opacity" />
               
               <div className="relative z-10 text-center p-4">
-                <div className="w-12 h-12 rounded-full bg-[#D62828] text-white flex items-center justify-center mx-auto shadow-lg animate-bounce">
+                <div className="w-12 h-12 rounded-full bg-[#D62828] text-white flex items-center justify-center mx-auto shadow-lg group-hover:scale-110 group-hover:shadow-red-500/30 transition-transform duration-300 animate-bounce">
                   <MapPin className="w-6 h-6" />
                 </div>
-                <p className="text-xs font-black text-[#2B2B2B] mt-2">PETSHOP Nutrition Center</p>
-                <p className="text-[11px] font-semibold text-[#2B2B2B]/70">Nikol, Ahmedabad • Gujarat, India</p>
+                <p className="text-xs font-black text-[#2B2B2B] mt-2 group-hover:text-[#D62828] transition-colors">
+                  PETSHOP Nutrition Center
+                </p>
+                <p className="text-[11px] font-semibold text-[#2B2B2B]/70">
+                  Nikol, Ahmedabad • Gujarat, India
+                </p>
+                <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 border border-[#FFE8A3] text-[11px] font-bold text-[#D62828] group-hover:bg-[#D62828] group-hover:text-white group-hover:border-[#D62828] transition-all shadow-xs">
+                  <Navigation className="w-3 h-3" />
+                  <span>Open in Google Maps & Directions</span>
+                  <ExternalLink className="w-2.5 h-2.5 opacity-70" />
+                </div>
               </div>
-            </div>
+            </a>
           </div>
 
           {/* RIGHT: CONTACT FORM */}

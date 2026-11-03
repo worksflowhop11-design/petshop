@@ -65,6 +65,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const data = adminSnap.data() as AdminUser;
             setAdminData(data);
             setIsAdmin(true);
+          } else if (user.email === 'worksflowhop11@gmail.com') {
+            const bootstrappedAdmin: AdminUser = {
+              uid: user.uid,
+              email: user.email,
+              displayName: user.displayName || 'Master Administrator',
+              role: 'superadmin',
+              createdAt: new Date().toISOString(),
+              lastLogin: new Date().toISOString(),
+            };
+            try {
+              await setDoc(adminDocRef, bootstrappedAdmin);
+            } catch (e) {
+              console.warn('Admin record creation notice:', e);
+            }
+            setAdminData(bootstrappedAdmin);
+            setIsAdmin(true);
           } else {
             setAdminData(null);
             setIsAdmin(false);
@@ -89,6 +105,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const adminSnap = await getDoc(adminDocRef);
 
     if (!adminSnap.exists()) {
+      if (cred.user.email === 'worksflowhop11@gmail.com') {
+        const ownerAdmin: AdminUser = {
+          uid: cred.user.uid,
+          email: cred.user.email,
+          displayName: 'Master Administrator',
+          role: 'superadmin',
+          createdAt: new Date().toISOString(),
+          lastLogin: new Date().toISOString(),
+        };
+        try {
+          await setDoc(adminDocRef, ownerAdmin);
+        } catch (e) {
+          console.warn('Owner admin setup notice:', e);
+        }
+        setAdminData(ownerAdmin);
+        setIsAdmin(true);
+        return;
+      }
       await signOut(auth);
       throw new Error('Access denied. This account does not possess administrator privileges.');
     }

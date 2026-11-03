@@ -69,7 +69,7 @@ function AppContent() {
     const loadDynamicData = async () => {
       try {
         const [prods, blogsData, content] = await Promise.all([
-          fetchProducts(),
+          fetchProducts(true),
           fetchBlogs(),
           fetchWebsiteContent(),
         ]);
